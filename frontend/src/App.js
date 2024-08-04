@@ -6,36 +6,27 @@ import Navbar from "./components/Navbar/Navbar";
 import Login from "./components/Login/Login";
 import Registration from "./components/Registration/Registration";
 import Home from "./components/Home/Home";
-
-
-// import { useState } from "react";
+import Popular from "./components/Popular/Popular";
+import HomeDataComponent from "./components/Home/HomeDataComponent";
+import Post from "./components/Post/Post";
 
 function App() {
-  // const [mode, setMode] = useState(`light`);
-
-  // const toggleMode = () => {
-  //   if (mode === "light") {
-  //     setMode("dark");
-  //     document.body.style.backgroundColor = "#042743";
-  //     document.body.style.color="white"
-  //   } else {
-  //     setMode("light");
-  //     document.body.style.backgroundColor = "white";
-  //     document.body.style.color="#042743"
-  //   }
-  // };
-
   return (
     <>
       <Router>
         <div className="flex">
-          <Navbar/> 
+          <Navbar />
           <Routes>
-            <Route path="/" element={<Home />}/>
-            <Route path="/home" element={<Home />}/>
-            <Route path="/signup" element={<Registration />}/>
-            <Route path="/login" element={<Login />}/>
-
+            <Route path="/" element={<Post />} />
+            <Route path="/post" element={<Post />} />
+            <Route path="/home" element={<HomeDataComponent />} />
+            <Route path="/signup" element={<Registration />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/popular" element={<Popular />} />
+            <Route path="/topics" element={<Popular />} />
+            <Route path="/qa" element={<Popular />} />
+            <Route path="/communities" element={<Popular />} />
+            <Route path="/profile" element={<Popular />} />
           </Routes>
         </div>
       </Router>

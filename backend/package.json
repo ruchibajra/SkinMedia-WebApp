@@ -8,14 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ruchibajra/PureCure-WebApp.git"
+    "url": "git+https://github.com/ruchibajra/SkinMedia-WebApp.git"
+   
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ruchibajra/PureCure-WebApp/issues"
+    "url": "https://github.com/ruchibajra/SkinMedia-WebApp/issues"
   },
-  "homepage": "https://github.com/ruchibajra/PureCure-WebApp#readme",
+  "homepage": "https://github.com/ruchibajra/SkinMedia-WebApp#readme",
   "description": "",
   "dependencies": {
     "bcryptjs": "^2.4.3",

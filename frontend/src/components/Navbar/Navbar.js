@@ -8,9 +8,11 @@ const Navbar = (props) => {
         {/* <div className={`nav-container navbar-${props.mode} bg-${props.mode} text-{${props.mode} === "dark" ? "white" : "black" } flex flex-col h-screen w-56 border-2 border-r-slate-300`}> */}
 
           <div className="logo flex items-center gap-4 justify-evenly border-b-[#9F9A9A] border-2 h-14 w-screen bg-white	">
-                <div><Link className="navbar-brand" to="#">PureCure</Link></div>
+                <div><Link className="navbar-brand" to="/home">SkinMedia</Link></div>
 
-                <div className="bg-[#E4E4E4] w-1/4 h-8 flex items-center pl-2 rounded-xl text-gray-500 text-sm">Search Here...</div>
+                <div className="bg-[#E4E4E4] w-1/4 h-8 flex items-center pl-2 rounded-xl text-gray-500 text-sm">
+                <input className = 'bg-[#E4E4E4] outline-none w-full text-sm' type="text" placeholder="Search Here..." />
+                </div>
 
                 <div >
                   <Link className="btn p-2 bg-red-600 rounded-2xl text-white w-14 h-8 gap-4 mr-3" to="/login">Login</Link>
@@ -23,10 +25,10 @@ const Navbar = (props) => {
 
 
               <Link className="navbar-brand" to="/home"> <i className="ri-home-4-line mr-2"></i>Home</Link>
-              <Link className="navbar-brand" to="/search"> <i className="ri-search-line mr-2"></i>Popular</Link>
-              <Link className="navbar-brand" to="/explore"> <i className="ri-book-open-line mr-2"></i>Topics</Link>
-              <Link className="navbar-brand" to="/notification"> <i className="ri-notification-3-line mr-2"></i>Q/Ans</Link>
-              <Link className="navbar-brand" to="/create"> <i className="ri-add-box-line mr-2"></i>Communities</Link>
+              <Link className="navbar-brand" to="/popular"> <i className="ri-search-line mr-2"></i>Popular</Link>
+              <Link className="navbar-brand" to="/topics"> <i className="ri-book-open-line mr-2"></i>Topics</Link>
+              <Link className="navbar-brand" to="/qa"> <i className="ri-notification-3-line mr-2"></i>Q/Ans</Link>
+              <Link className="navbar-brand" to="/communities"> <i className="ri-add-box-line mr-2"></i>Communities</Link>
               <Link className="navbar-brand" to="/profile"> <i className="ri-user-line mr-2"></i>Profile</Link> 
               {/* <Link className="navbar-brand" to="/profile"> <i className="ri-user-line mr-2"></i>Settings</Link>  */}
           </div>

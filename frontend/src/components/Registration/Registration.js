@@ -7,7 +7,7 @@ const Registration = () => {
         <div className='flex flex-col h-4/5 w-1/3  items-center	'>
             <h1 className = 'font-sans text-3xl font-bold	'>Create a new account!</h1>
             <span>Or</span>
-            <a href="#" className='text-blue-600'>Login</a>
+            <a href="/login" className='text-blue-600'>Login</a>
 
             <div className='flex flex-col bg-white  w-11/12 mt-5 rounded-md shadow-md'>
                 <div className='my-6 mx-10 flex flex-col '>
