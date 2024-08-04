@@ -1,0 +1,4 @@
+# to ignore these files in github
+
+./mode_modules
+./.env
