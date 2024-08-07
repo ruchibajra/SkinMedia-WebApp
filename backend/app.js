@@ -3,6 +3,8 @@ const connectDB = require('./src/config/db');
 const userProfileRoutes =require('./src/routes/userProfileRoutes')
 const authRoutes =require('./src/routes/authRoutes')
 const categoryRoutes = require('./src/routes/categoryRoutes')
+const createPostRoutes = require('./src/routes/createPostRoutes')
+
 const  cors =require('cors');
 
 
@@ -21,6 +23,8 @@ app.use(express.json());
 app.use('/user', userProfileRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/category', categoryRoutes);
+app.use('/api/createPost', createPostRoutes);
+
 
 
 app.listen(port, () => {

@@ -5,10 +5,13 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Login from "./components/Login/Login";
 import Registration from "./components/Registration/Registration";
-import Home from "./components/Home/Home";
+// import Home from "./components/Home/Home";
 import Popular from "./components/Popular/Popular";
 import HomeDataComponent from "./components/Home/HomeDataComponent";
 import Post from "./components/Post/Post";
+import CategoryIntegration from "./components/Category/Category";
+import CreatePost from "./components/CreatePost/CreatePost";
+import Profile from "./components/Profile/Profile";
 
 function App() {
   return (
@@ -17,16 +20,17 @@ function App() {
         <div className="flex">
           <Navbar />
           <Routes>
-            <Route path="/" element={<Post />} />
+            <Route path="/" element={<CreatePost />} />
             <Route path="/post" element={<Post />} />
             <Route path="/home" element={<HomeDataComponent />} />
             <Route path="/signup" element={<Registration />} />
             <Route path="/login" element={<Login />} />
             <Route path="/popular" element={<Popular />} />
-            <Route path="/topics" element={<Popular />} />
+            <Route path="/topics" element={<CategoryIntegration />}  />
             <Route path="/qa" element={<Popular />} />
             <Route path="/communities" element={<Popular />} />
-            <Route path="/profile" element={<Popular />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/category" element={<CategoryIntegration />} />
           </Routes>
         </div>
       </Router>

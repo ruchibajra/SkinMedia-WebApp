@@ -1,114 +1,118 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const Post = () => {
+const Post = ({ noMargin }) => {
   const navigate = useNavigate();
 
   return (
-    <>
-      <div className="main-page p-10 ml-56 mt-14 w-11/12 ">
-        {/* card-1  */}
-        <div className="card flex flex-col mt-4 rounded h-automt-10 p-5 border-2 border-r-slate-300">
-          <button
-            onClick={() => navigate(-1)}
-            className="bg-slate-400 p-1 pl-4 pr-4 w-24 text-sm rounded-lg"
-          >
-            Back
-          </button>
+    <div className={`p-6 mt-8 ${noMargin ? '' : 'ml-56'} max-w-7xl mx-auto`}>
+      {/* Card Container */}
+      <button
+          onClick={() => navigate(-1)}
+          className="bg-gray-800 text-white py-2 px-4 rounded-lg mt-4 hover:bg-gray-700 transition"
+        >
+          Back
+        </button>
+      <div className="bg-white shadow-lg rounded-lg overflow-hidden mt-4">
+      
 
-          <div className="flex">
+        <div className="flex flex-col md:flex-row p-6">
+          {/* Image Section */}
+          <div className="flex-shrink-0 md:w-1/2 mb-6 md:mb-0">
             <img
-              className="h-96 w-5/12 mt-2 rounded-xl"
+              className="w-full h-96 object-cover rounded-lg"
               src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Sunscreen_on_back_under_normal_and_UV_light.jpg/1280px-Sunscreen_on_back_under_normal_and_UV_light.jpg"
-              alt=""
+              alt="Sunscreen"
             />
+          </div>
 
-            <div className="flex flex-col">
-              <div className="flex">
-                <div className="profile-pic h-7 w-7 rounded-full bg-red-500 ml-5"></div>
-                <span className="flex  ml-3 mr-2">@AcneTreat_byRuch</span>{" "}
-                <h3>(10hr ago)</h3>
+          {/* Content Section */}
+          <div className="flex-1 ml-8">
+            <div className="flex items-center mb-4">
+              <div className="h-10 w-10 rounded-full bg-red-500 mr-3"></div>
+              <div>
+                <span className="font-semibold">@AcneTreat_byRuch</span>
+                <p className="text-gray-500 text-sm">(10hr ago)</p>
               </div>
+            </div>
 
-              <div className="ml-16 ">
-                <h1 className="font-bold text-lg">
-                  Sunscreen ACTUALLY protected my skin from skin DISEASE
-                </h1>
+            <h1 className="text-2xl font-bold mb-4">
+              Sunscreen ACTUALLY protected my skin from skin DISEASE
+            </h1>
 
-                <span>
-                  Honest Review: Lorem, ipsum dolor sit amet consectetur
-                  adipisicing elit. Voluptatum fugiat, id soluta necessitatibus
-                  veritatis assumenda saepe. Blanditiis libero voluptas debitis!
-                  Deleniti doloribus inventore sed perspiciatis! Corporis cum
-                  iste fugiat ab?
-                </span>
+            <p className="text-gray-700 mb-4">
+              Honest Review: Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fugiat, id soluta necessitatibus veritatis assumenda saepe. Blanditiis libero voluptas debitis! Deleniti doloribus inventore sed perspiciatis! Corporis cum iste fugiat ab?
+            </p>
 
-                <div className="text-sm flex mt-3 rounded-lg gap-5">
-                  <p className="bg-slate-200 p-2 text-xs rounded-lg">
-                    Product Name: <br /> Cetaphil Sun SPF 50+
-                  </p>
-                  <p className="bg-slate-200 p-2 text-xs rounded-lg">
-                    Source: <br /> www.healme.com.np
-                  </p>
-                  <p className="bg-slate-200 p-2 text-xs rounded-lg">
-                    SkinType: <br /> Oily/Combination Skin
-                  </p>
-                  <p className="bg-slate-200 p-2 text-xs rounded-lg">
-                    TimeSpan: <br /> 2 Months
-                  </p>
-                </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600 mb-4">
+              <div className="bg-gray-100 p-3 rounded-lg">
+                <strong>Product Name:</strong> <br /> Cetaphil Sun SPF 50+
               </div>
-
-              <div className="ml-8 post-details flex">
-                <button className="btn bg-[#E4E4E4] rounded-2xl text-grey text-sm ml-8 mt-2 w-14 h-6 ">
-                  <i class="ri-thumb-up-line mr-2"></i>524
-                </button>
-                <button className="btn bg-[#E4E4E4] rounded-2xl text-grey text-sm ml-8 mt-2 w-14 h-6 ">
-                  <i class="ri-chat-2-line mr-2 ">5.3k</i>
-                </button>
-                <button className="btn bg-[#E4E4E4] rounded-2xl text-grey text-sm ml-8 mt-2 w-14 h-6  ">
-                  <i class="ri-share-forward-line mr-2"></i>48
-                </button>
+              <div className="bg-gray-100 p-3 rounded-lg">
+                <strong>Source:</strong> <br /> www.healme.com.np
               </div>
+              <div className="bg-gray-100 p-3 rounded-lg">
+                <strong>Skin Type:</strong> <br /> Oily/Combination Skin
+              </div>
+              <div className="bg-gray-100 p-3 rounded-lg">
+                <strong>Time Span:</strong> <br /> 2 Months
+              </div>
+            </div>
 
-              <hr className="ml-16 mr-5 mt-4 border-1" />
+            <div className="flex gap-4 mb-4">
+              <button className="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg flex items-center gap-1">
+                <i className="ri-thumb-up-line"></i> 524
+              </button>
+              <button className="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg flex items-center gap-1">
+                <i className="ri-chat-2-line"></i> 5.3k
+              </button>
+              <button className="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg flex items-center gap-1">
+                <i className="ri-share-forward-line"></i> 48
+              </button>
+            </div>
 
-              <div className="ml-16 mt-4">
-                <h2>Post a Reply</h2>
-                <input
-                  className="w-full h-20 border-2 rounded mt-2"
-                  type="text"
-                  placeholder="Write a response to this post"
-                />
+            <hr className="border-gray-300 mb-4" />
 
-                <div className="flex flex-col mt-4 gap-4">
-                  {/* reply1  */}
-                  <div>
-                    <div className="flex text-sm  ">
-                      <div className="profile-pic h-5 w-5 rounded-full bg-red-500 "></div>
-                      <span className="flex  ml-3 mr-2">@AcneTreat_byRuch</span>{" "}
-                      <h3>(10hr ago)</h3>
-                      <button className="ml-52 bg-slate-700 text-white pl-1 pr-1 rounded">
-                        Reply
-                      </button>
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold mb-2">Post a Reply</h2>
+              <input
+                className="w-full h-20 border-2 border-gray-300 rounded-lg p-2"
+                type="text"
+                placeholder="Write a response to this post"
+              />
+
+              <div className="mt-4 space-y-4">
+                {/* Reply 1 */}
+                <div className="flex items-start gap-3">
+                  <div className="h-8 w-8 rounded-full bg-red-500"></div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <span className="font-semibold">@AcneTreat_byRuch</span>
+                        <p className="text-gray-500 text-sm">(10hr ago)</p>
+                      </div>
+                      <button className="bg-gray-700 text-white px-3 py-1 rounded-lg">Reply</button>
                     </div>
-                    <h1 className="text-sm">
+                    <p className="text-sm text-gray-700">
                       Sunscreen ACTUALLY protected my skin from skin DISEASE
-                    </h1>
+                    </p>
                   </div>
+                </div>
 
-                  <div>
-                    <div className="flex text-sm  ">
-                      <div className="profile-pic h-5 w-5 rounded-full bg-red-500 "></div>
-                      <span className="flex  ml-3 mr-2">@AcneTreat_byRuch</span>{" "}
-                      <h3>(10hr ago)</h3>
-                      <button className="ml-52 bg-slate-700 text-white pl-1 pr-1 rounded">
-                        Reply
-                      </button>
+                {/* Reply 2 */}
+                <div className="flex items-start gap-3">
+                  <div className="h-8 w-8 rounded-full bg-red-500"></div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <span className="font-semibold">@AcneTreat_byRuch</span>
+                        <p className="text-gray-500 text-sm">(10hr ago)</p>
+                      </div>
+                      <button className="bg-gray-700 text-white px-3 py-1 rounded-lg">Reply</button>
                     </div>
-                    <h1 className="text-sm">
+                    <p className="text-sm text-gray-700">
                       Sunscreen ACTUALLY protected my skin from skin DISEASE
-                    </h1>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -116,7 +120,7 @@ const Post = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
