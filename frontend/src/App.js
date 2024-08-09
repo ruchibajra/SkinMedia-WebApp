@@ -20,10 +20,10 @@ function App() {
         <div className="flex">
           <Navbar />
           <Routes>
-            <Route path="/" element={<CreatePost />} />
+            <Route path="/" element={<Login />} />
             <Route path="/post" element={<FullPost />} />
             <Route path="/home" element={<HomeDataComponent />} />
-            <Route path="/signup" element={<Registration />} />
+            <Route path="/signup" elem  ent={<Registration />} />
             <Route path="/login" element={<Login />} />
             <Route path="/popular" element={<Popular />} />
             <Route path="/topics" element={<CategoryIntegration />}  />

@@ -1,9 +1,29 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import axiosInstance from "../../config/axiosConfig";
 
 const HomeCard = (props) => {
+  const { email } = useParams();
+
   const [activePostIndex, setActivePostIndex] = useState(null);
+  const [userName, setUserName] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/users/${email}`
+        );
+        setUserName(response.data.username); // Assuming response data has a 'name' field
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        // Handle fetch error
+      }
+    };
+    fetchUserData();
+  }, [email]);
 
   // const handleCardClick = () => {
   //   navigate("/post");
@@ -17,6 +37,8 @@ const HomeCard = (props) => {
 
   return (
     <div className="mt-10 container ml-64 p-6 w-10/12">
+      <h1 className="text-3xl font-bold">Welcome, {userName}!</h1>
+
       {/* TOPIC SECTION START */}
       <div className="flex flex-wrap gap-4 mb-8">
         {props.topicData.map((topic, index) => (
@@ -37,7 +59,6 @@ const HomeCard = (props) => {
       </div>
       {/* TOPIC SECTION END */}
 
-
       {/* SECOND PART SECTION START */}
       <div className="flex flex-col md:flex-row gap-8">
         {/* POST SECTION START */}
@@ -56,6 +77,27 @@ const HomeCard = (props) => {
               </div>
               <div className="p-4">
                 <h1 className="text-xl font-bold mb-2">{post.title}</h1>
+                <p className="text-gray-700 mb-4">
+                  Honest Review: Lorem ipsum dolor sit amet consectetur
+                  adipisicing elit. Voluptatum fugiat, id soluta necessitatibus
+                  veritatis assumenda saepe. Blanditiis libero voluptas debitis!
+                  Deleniti doloribus inventore sed perspiciatis! Corporis cum
+                  iste fugiat ab?
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600 mb-4">
+                  <div className="bg-gray-100 p-3 rounded-lg">
+                    <strong>Product Name:</strong> <br /> Cetaphil Sun SPF 50+
+                  </div>
+                  <div className="bg-gray-100 p-3 rounded-lg">
+                    <strong>Source:</strong> <br /> www.healme.com.np
+                  </div>
+                  <div className="bg-gray-100 p-3 rounded-lg">
+                    <strong>Skin Type:</strong> <br /> Oily/Combination Skin
+                  </div>
+                  <div className="bg-gray-100 p-3 rounded-lg">
+                    <strong>Time Span:</strong> <br /> 2 Months
+                  </div>
+                </div>
                 <img
                   className="w-full h-64 object-cover rounded-lg mb-4"
                   src={post.imgUrl}
@@ -63,72 +105,88 @@ const HomeCard = (props) => {
                 />
                 <div className="flex flex-col  text-gray-600">
                   <div className="flex justify-between">
-                  <button className="flex items-center gap-1 h-9 w-36 justify-center bg-gray-200 rounded-full px-4 py-1 text-sm">
-                    <i className="ri-thumb-up-line"></i>
-                    {post.likes}
-                  </button>
-                  <button
-                    onClick={() => handleComment(index)} // Pass the index to the handler
-                    className="flex items-center gap-1 h-9 w-36 justify-center  bg-gray-200 rounded-full px-4 py-1 text-sm"
-                  >
-                    <i className="ri-chat-2-line"></i>
-                    {post.comment}
-                  </button>
-                  
-                  <button className="flex items-center gap-1 h-9 w-36 justify-center  bg-gray-200 rounded-full px-4 py-1 text-sm">
-                    <i className="ri-share-forward-line"></i>
-                    {post.shares}
-                  </button>
+                    <button className="flex items-center gap-1 h-9 w-36 justify-center bg-gray-200 rounded-full px-4 py-1 text-sm">
+                      <i className="ri-thumb-up-line"></i>
+                      {post.likes}
+                    </button>
+                    <button
+                      onClick={() => handleComment(index)} // Pass the index to the handler
+                      className="flex items-center gap-1 h-9 w-36 justify-center  bg-gray-200 rounded-full px-4 py-1 text-sm"
+                    >
+                      <i className="ri-chat-2-line"></i>
+                      {post.comment}
+                    </button>
+
+                    <button className="flex items-center gap-1 h-9 w-36 justify-center  bg-gray-200 rounded-full px-4 py-1 text-sm">
+                      <i className="ri-share-forward-line"></i>
+                      {post.shares}
+                    </button>
                   </div>
 
                   {/* ADD A COMMENT PART */}
                   <div>
-                  {activePostIndex === index && (
-                    <div className="mb-4 mt-4">
-                    <h2 className="text-xl font-semibold mb-2">Post a Reply</h2>
-                    <input
-                      className="w-full h-20 border-2 border-gray-300 rounded-lg p-2"
-                      type="text"
-                      placeholder="Write a response to this post"
-                    />
-      
-                    <div className="mt-4 space-y-4">
-                      {/* Reply 1 */}
-                      <div className="flex items-start gap-3">
-                        <div className="h-8 w-8 rounded-full bg-red-500"></div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-2">
-                            <div>
-                              <span className="font-semibold">@AcneTreat_byRuch</span>
-                              <p className="text-gray-500 text-sm">(10hr ago)</p>
+                    {activePostIndex === index && (
+                      <div className="mb-4 mt-4">
+                        <h2 className="text-xl font-semibold mb-2">
+                          Post a Reply
+                        </h2>
+                        <input
+                          className="w-full h-20 border-2 border-gray-300 rounded-lg p-2"
+                          type="text"
+                          placeholder="Write a response to this post"
+                        />
+
+                        <div className="mt-4 space-y-4">
+                          {/* Reply 1 */}
+                          <div className="flex items-start gap-3">
+                            <div className="h-8 w-8 rounded-full bg-red-500"></div>
+                            <div className="flex-1">
+                              <div className="flex items-center justify-between mb-2">
+                                <div>
+                                  <span className="font-semibold">
+                                    @AcneTreat_byRuch
+                                  </span>
+                                  <p className="text-gray-500 text-sm">
+                                    (10hr ago)
+                                  </p>
+                                </div>
+                                <button className="bg-gray-700 text-white px-3 py-1 rounded-lg">
+                                  Reply
+                                </button>
+                              </div>
+                              <p className="text-sm text-gray-700">
+                                Sunscreen ACTUALLY protected my skin from skin
+                                DISEASE
+                              </p>
                             </div>
-                            <button className="bg-gray-700 text-white px-3 py-1 rounded-lg">Reply</button>
                           </div>
-                          <p className="text-sm text-gray-700">
-                            Sunscreen ACTUALLY protected my skin from skin DISEASE
-                          </p>
+
+                          {/* Reply 2 */}
+                          <div className="flex items-start gap-3">
+                            <div className="h-8 w-8 rounded-full bg-red-500"></div>
+                            <div className="flex-1">
+                              <div className="flex items-center justify-between mb-2">
+                                <div>
+                                  <span className="font-semibold">
+                                    @AcneTreat_byRuch
+                                  </span>
+                                  <p className="text-gray-500 text-sm">
+                                    (10hr ago)
+                                  </p>
+                                </div>
+                                <button className="bg-gray-700 text-white px-3 py-1 rounded-lg">
+                                  Reply
+                                </button>
+                              </div>
+                              <p className="text-sm text-gray-700">
+                                Sunscreen ACTUALLY protected my skin from skin
+                                DISEASE
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       </div>
-      
-                      {/* Reply 2 */}
-                      <div className="flex items-start gap-3">
-                        <div className="h-8 w-8 rounded-full bg-red-500"></div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-2">
-                            <div>
-                              <span className="font-semibold">@AcneTreat_byRuch</span>
-                              <p className="text-gray-500 text-sm">(10hr ago)</p>
-                            </div>
-                            <button className="bg-gray-700 text-white px-3 py-1 rounded-lg">Reply</button>
-                          </div>
-                          <p className="text-sm text-gray-700">
-                            Sunscreen ACTUALLY protected my skin from skin DISEASE
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  )}
+                    )}
                   </div>
                 </div>
               </div>
@@ -136,7 +194,6 @@ const HomeCard = (props) => {
           ))}
         </div>
         {/* POST SECTION END */}
-
 
         {/* POPULAR COMMUNITIES SECTION START */}
         <div className="w-full md:w-96 bg-gray-200 p-4 rounded-lg shadow-md">
