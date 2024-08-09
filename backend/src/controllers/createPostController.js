@@ -1,40 +1,50 @@
-
+const Post = require("../models/createPostModel");
+const domain = "http://localhost:5000";
 
 // Helper function to send error responses
 const sendErrorResponse = (res, error) => {
-    console.log(error);
-    res.status(500).json({ msg: error.message });
-  };
+  console.log(error);
+  res.status(500).json({ msg: error.message });
+};
 
+// Create a new post (Admin Only)
+const createPost = async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      productName,
+      source,
+      skintype,
+      productUsedTime,
+    } = req.body;
 
-    // Create a new category (Admin Only)
-    const createPost = async (req, res) => {
-        const { title, description, productName, source, skintype, productUsedTime } = req.body;
-      
-        if (!title || !description || !productName || !source || !skintype || !productUsedTime ) {
-          return res.status(400).json({ msg: "All fields are required" });
-        }
-      
-        //  check if category already exists
-        try {
-          const postExists = await createPost.findOne({ title });
-          if (postExists) {
-            return res.status(400).json({ msg: "Post already exists" });
-          }
-          const post = new createPost({
-            title, description, productName, source, skintype, productUsedTime
-          });
-          await post.save();
-      
-          return res.status(201).json({ 
-            msg: "Posr added successfully", 
-            posr: post,
-            success: true,
-           });
-        } catch (error) {
-          sendErrorResponse(res, error);
-          // return res.status(500).json({ msg: error.message });
-        }
-      };
+    let postData = {
+      title,
+      description,
+      productName,
+      source,
+      skintype,
+      productUsedTime,
+    };
+    console.log(req.body)
+console.log(req.file)
+    if (req.file) {
+      const productImage = `${domain}/uploads/posts/${req.file.filename}`;
+      postData.productImage = productImage;
+    }
 
-  module.exports = {createPost};
+    const post = new Post(postData);
+    await post.save();
+
+    res.status(201).json({
+      msg: "Post created successfully",
+      post: post,
+      success: true,
+    });
+  } catch (error) {
+    sendErrorResponse(res, error);
+  }
+};
+
+module.exports = { createPost };

@@ -8,10 +8,10 @@ import Registration from "./components/Registration/Registration";
 // import Home from "./components/Home/Home";
 import Popular from "./components/Popular/Popular";
 import HomeDataComponent from "./components/Home/HomeDataComponent";
-import Post from "./components/Post/Post";
 import CategoryIntegration from "./components/Category/Category";
 import CreatePost from "./components/CreatePost/CreatePost";
 import Profile from "./components/Profile/Profile";
+import FullPost from "./components/FullPost/FullPost";
 
 function App() {
   return (
@@ -21,7 +21,7 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<CreatePost />} />
-            <Route path="/post" element={<Post />} />
+            <Route path="/post" element={<FullPost />} />
             <Route path="/home" element={<HomeDataComponent />} />
             <Route path="/signup" element={<Registration />} />
             <Route path="/login" element={<Login />} />
@@ -30,7 +30,7 @@ function App() {
             <Route path="/qa" element={<Popular />} />
             <Route path="/communities" element={<Popular />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/category" element={<CategoryIntegration />} />
+            <Route path="/createPost" element={<CreatePost />} />
           </Routes>
         </div>
       </Router>

@@ -80,7 +80,7 @@ const Registration = () => {
     <>
       <div className="flex justify-center items-center h-screen w-full bg-gray-100">
         <div className="flex flex-col h-auto w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
-          <h1 className="text-3xl font-bold mb-4">Create a New Account</h1>
+          <h1 className="text-3xl font-bold flex justify-center mb-4">Create a New Account</h1>
           <span className="text-center text-gray-600 mb-4">Or</span>
           <a href="/login" className="text-blue-600 text-center block mb-6">
             Login

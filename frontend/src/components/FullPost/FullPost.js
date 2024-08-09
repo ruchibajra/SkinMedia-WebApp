@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const Post = ({ noMargin }) => {
+const FullPost = ({ noMargin }) => {
   const navigate = useNavigate();
 
   return (
@@ -124,4 +124,4 @@ const Post = ({ noMargin }) => {
   );
 };
 
-export default Post;
+export default FullPost;

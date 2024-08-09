@@ -1,6 +1,5 @@
 import React from 'react';
 import HomeCard from './HomeCard';
-import HomePost from './HomePost';
 
 const HomeDataComponent = () => {
   const topicList = [
@@ -65,7 +64,6 @@ const HomeDataComponent = () => {
   return (
     <>
       <HomeCard topicData={topicList} postData={postList} popularUserData = {popularUserList}/>
-      {/* <HomePost topicData={topicList} postData={postList} popularUserData = {popularUserList}/> */}
     </>
   );
 };

@@ -13,7 +13,7 @@ axiosInstance.interceptors.request.use(
     const token = localStorage.getItem("token");
     console.log(token);
     if (token) {
-      config.headers["Authorization"] = `${token}`; 
+      config.headers["Authorization"] = token;
     }
     return config;
   },

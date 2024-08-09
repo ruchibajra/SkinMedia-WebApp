@@ -17,6 +17,11 @@ const createPostSchema = new Schema({
     required: true,
   },
 
+  productImage: {
+    type: String,
+    required: true,
+  },
+
   source: {
     type: String,
     required: true,
@@ -29,8 +34,9 @@ const createPostSchema = new Schema({
   
   productUsedTime: {
     type: String,
+    required: true,
   },
 });
 
-const createPost = mongoose.model("Post", createPostSchema);
-module.exports = createPost;
+const Post = mongoose.model("Post", createPostSchema);
+module.exports = Post;
