@@ -1,33 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
-import axiosInstance from "../../config/axiosConfig";
+import React, { useState, useEffect } from "react";
 
 const HomeCard = (props) => {
-  const { email } = useParams();
-
   const [activePostIndex, setActivePostIndex] = useState(null);
-  const [userName, setUserName] = useState("");
-  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/api/users/${email}`
-        );
-        setUserName(response.data.username); // Assuming response data has a 'name' field
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        // Handle fetch error
-      }
-    };
-    fetchUserData();
-  }, [email]);
-
-  // const handleCardClick = () => {
-  //   navigate("/post");
-  // };
+    const user = JSON.parse(localStorage.getItem("user"));
+    if(user){
+      setUsername(user.username);
+    }
+  }, []);
 
   // event when comment button is clicked
   const handleComment = (index) => {
@@ -37,8 +20,8 @@ const HomeCard = (props) => {
 
   return (
     <div className="mt-10 container ml-64 p-6 w-10/12">
-      <h1 className="text-3xl font-bold">Welcome, {userName}!</h1>
 
+      <h1>Welcome, {username} </h1>
       {/* TOPIC SECTION START */}
       <div className="flex flex-wrap gap-4 mb-8">
         {props.topicData.map((topic, index) => (
