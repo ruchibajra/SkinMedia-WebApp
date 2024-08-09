@@ -6,7 +6,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
 const Registration = () => {
-  const navigate = useNavigate();
   const [userData, setUserData] = useState({
     username: "",
     phone: "",

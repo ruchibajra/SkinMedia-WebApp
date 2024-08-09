@@ -27,6 +27,8 @@ const registerUser = async (req, res) => {
       role,
     });
 
+    // console.log(user.role);
+
     await user.save();
 
     // create profile for new user at the time of registration
@@ -46,6 +48,9 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
+
+  console.log("Received data:", req.body); // Add this line to debug
+
 
   try {
     let user = await User.findOne({ email });
