@@ -12,6 +12,7 @@ import CategoryIntegration from "./components/Category/Category";
 import CreatePost from "./components/CreatePost/CreatePost";
 import Profile from "./components/Profile/Profile";
 import FullPost from "./components/FullPost/FullPost";
+import UpdatePostModal from "./components/UpdatePostModal/UpdatePostModal";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
         <div className="flex">
           <Navbar />
           <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<UpdatePostModal />} />
             <Route path="/post" element={<FullPost />} />
             <Route path="/home" element={<HomeDataComponent />} />
             <Route path="/signup" element={<Registration />} />

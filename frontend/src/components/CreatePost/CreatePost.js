@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
 import axiosInstance from "../../config/axiosConfig";
 
 
@@ -16,6 +14,15 @@ const CreatePost = () => {
     skintype: "",
     productUsedTime: "",
   });
+
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    // Retrieve user information from localStorage or context
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    if (userInfo) {
+      setUser(userInfo);
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,6 +50,11 @@ const CreatePost = () => {
     data.append("source", formData.source);
     data.append("skintype", formData.skintype);
     data.append("productUsedTime", formData.productUsedTime);
+    data.append("username", user.username); // Add user details
+    // data.append("userId", user.id); // Add user ID if needed
+
+    console.log(user.username);
+    // console.log(user.id);
 
     console.log("Data:", data);
     console.log("FormData:", formData);
@@ -63,8 +75,11 @@ const CreatePost = () => {
 
   return (
     <div className="ml-56 container mx-auto p-4">
+
       <ToastContainer />
-      <h1 className="text-2xl font-bold mb-4">Create Post</h1>
+      <h1 className="text-2xl font-bold mb-4 mt-14">Create Post</h1> <br />
+      <h1 className="text-xl mb-4">Welcome, {user ? user.username : "Guest"}</h1> 
+
       <form onSubmit={handleSubmit}>
        
         <div className="mb-4">

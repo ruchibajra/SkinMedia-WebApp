@@ -1,27 +1,72 @@
 import React, { useState, useEffect } from "react";
+import axiosInstance from "../../config/axiosConfig";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const HomeCard = (props) => {
   const [activePostIndex, setActivePostIndex] = useState(null);
   const [username, setUsername] = useState("");
-
+  const [posts, setPosts] = useState([]);
+  const [dropdownIndex, setDropdownIndex] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
-    if(user){
+    if (user) {
       setUsername(user.username);
     }
+    fetchPosts();
   }, []);
 
-  // event when comment button is clicked
+  const fetchPosts = async () => {
+    try {
+      const response = await axiosInstance.get("/api/posts/");
+      setPosts(response.data.posts);
+    } catch (error) {
+      console.error("Error fetching posts: ", error);
+    }
+  };
+
+  // Function to handle post update
+  const handleUpdate = (post) => {
+    navigate("/createPost", { state: { post } });
+  };
+
+  // Function to handle post deletion
+  const handleDelete = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.delete(
+        `http://localhost:5000/api/posts/delete/${id}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      toast.success(response.data.msg);
+      fetchPosts();
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      toast.error(error.response.data.msg);
+    }
+  };
+
+  // Function to toggle the dropdown
+  const toggleDropdown = (index) => {
+    setDropdownIndex(dropdownIndex === index ? null : index);
+  };
+
+  // Function to handle comment section toggle
   const handleComment = (index) => {
-    // Toggle the active post index to show/hide the comment section
     setActivePostIndex(activePostIndex === index ? null : index);
   };
 
   return (
     <div className="mt-10 container ml-64 p-6 w-10/12">
-
       <h1>Welcome, {username} </h1>
+
       {/* TOPIC SECTION START */}
       <div className="flex flex-wrap gap-4 mb-8">
         {props.topicData.map((topic, index) => (
@@ -43,64 +88,85 @@ const HomeCard = (props) => {
       {/* TOPIC SECTION END */}
 
       {/* SECOND PART SECTION START */}
-      <div className="flex flex-col md:flex-row gap-8">
+      <div className="flex gap-10">
         {/* POST SECTION START */}
         <div className="flex-1">
-          {props.postData.map((post, index) => (
+          {posts.map((post, index) => (
             <div
-              key={index}
+              key={post._id}
               className="bg-white border border-gray-300 rounded-lg shadow-md mb-6 cursor-pointer hover:shadow-lg transition-shadow"
             >
               <div className="flex items-center p-4 border-b border-gray-300">
                 <div className="h-10 w-10 rounded-full bg-gray-400"></div>
-                <div className="ml-4">
-                  <span className="block font-semibold">{post.username}</span>
-                  <span className="text-gray-600 text-sm">{post.timespan}</span>
+                <div className="ml-4 w-full flex items-center justify-between">
+                  <div>
+                    <span className="block font-semibold">{post.username}</span>
+                    <span className="text-gray-600 text-sm">
+                      {post.timespan}
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <i
+                      className="three-dots ri-more-2-line text-xl cursor-pointer"
+                      onClick={() => toggleDropdown(index)}
+                    ></i>
+                    {dropdownIndex === index && (
+                      <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-300 shadow-lg rounded-md">
+                        <button
+                          onClick={() => handleUpdate(post)}
+                          className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+                        >
+                          Update
+                        </button>
+                        <button
+                          onClick={() => handleDelete(post._id)}
+                          className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="p-4">
                 <h1 className="text-xl font-bold mb-2">{post.title}</h1>
                 <p className="text-gray-700 mb-4">
-                  Honest Review: Lorem ipsum dolor sit amet consectetur
-                  adipisicing elit. Voluptatum fugiat, id soluta necessitatibus
-                  veritatis assumenda saepe. Blanditiis libero voluptas debitis!
-                  Deleniti doloribus inventore sed perspiciatis! Corporis cum
-                  iste fugiat ab?
+                  Honest Review: {post.description}
                 </p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600 mb-4">
                   <div className="bg-gray-100 p-3 rounded-lg">
-                    <strong>Product Name:</strong> <br /> Cetaphil Sun SPF 50+
+                    <strong>Product Name:</strong> <br /> {post.productName}
                   </div>
                   <div className="bg-gray-100 p-3 rounded-lg">
-                    <strong>Source:</strong> <br /> www.healme.com.np
+                    <strong>Source:</strong> <br /> {post.source}
                   </div>
                   <div className="bg-gray-100 p-3 rounded-lg">
-                    <strong>Skin Type:</strong> <br /> Oily/Combination Skin
+                    <strong>Skin Type:</strong> <br /> {post.skintype}
                   </div>
                   <div className="bg-gray-100 p-3 rounded-lg">
-                    <strong>Time Span:</strong> <br /> 2 Months
+                    <strong>Time Span:</strong> <br /> {post.productUsedTime}
                   </div>
                 </div>
                 <img
                   className="w-full h-64 object-cover rounded-lg mb-4"
-                  src={post.imgUrl}
+                  src={post.productImage}
                   alt="Post"
                 />
-                <div className="flex flex-col  text-gray-600">
+                <div className="flex flex-col text-gray-600">
                   <div className="flex justify-between">
                     <button className="flex items-center gap-1 h-9 w-36 justify-center bg-gray-200 rounded-full px-4 py-1 text-sm">
                       <i className="ri-thumb-up-line"></i>
                       {post.likes}
                     </button>
                     <button
-                      onClick={() => handleComment(index)} // Pass the index to the handler
-                      className="flex items-center gap-1 h-9 w-36 justify-center  bg-gray-200 rounded-full px-4 py-1 text-sm"
+                      onClick={() => handleComment(index)}
+                      className="flex items-center gap-1 h-9 w-36 justify-center bg-gray-200 rounded-full px-4 py-1 text-sm"
                     >
                       <i className="ri-chat-2-line"></i>
                       {post.comment}
                     </button>
-
-                    <button className="flex items-center gap-1 h-9 w-36 justify-center  bg-gray-200 rounded-full px-4 py-1 text-sm">
+                    <button className="flex items-center gap-1 h-9 w-36 justify-center bg-gray-200 rounded-full px-4 py-1 text-sm">
                       <i className="ri-share-forward-line"></i>
                       {post.shares}
                     </button>
@@ -188,7 +254,7 @@ const HomeCard = (props) => {
                 <span className="block font-semibold">
                   {popularUser.username}
                 </span>
-                <span className="text-gray-600">{popularUser.members} </span>
+                <span className="text-gray-600">{popularUser.members}</span>
               </div>
             </div>
           ))}
