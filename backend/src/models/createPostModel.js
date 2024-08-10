@@ -30,12 +30,23 @@ const createPostSchema = new Schema({
   skintype: {
     type: String,
     required: true,
-  },
+  },  
   
   productUsedTime: {
     type: String,
     required: true,
   },
+
+  username: {
+    type: String,
+    ref: "User",
+    required: true,
+  },
+
+  // userId: {
+  //   type: String,
+  //   required: true,
+  // },
 });
 
 const Post = mongoose.model("Post", createPostSchema);

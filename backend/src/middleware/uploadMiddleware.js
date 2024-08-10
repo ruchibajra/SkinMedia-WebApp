@@ -40,7 +40,7 @@ const filter = (req, file, next) => {
 // Function to get the destination path
 const getDestination = (folderName) => {
   return (req, file, next) => {
-    next(null, path.join(__dirname, `../uploads/${folderName}`));
+    next(null, path.join(__dirname, `../../uploads/${folderName}`));
   };
 };
 

@@ -17,6 +17,7 @@ const createPost = async (req, res) => {
       source,
       skintype,
       productUsedTime,
+      username
     } = req.body;
 
     let postData = {
@@ -26,9 +27,10 @@ const createPost = async (req, res) => {
       source,
       skintype,
       productUsedTime,
+      username
     };
-    console.log(req.body);
-    console.log(req.file);
+    // console.log(req.body);
+    // console.log(req.file);
     if (req.file) {
       const productImage = `${domain}/uploads/posts/${req.file.filename}`;
       postData.productImage = productImage;
@@ -57,6 +59,11 @@ const updatePost = async (req, res) => {
       source,
       skintype,
       productUsedTime,
+      username,
+      // userId
+
+      
+
     } = req.body;
     let updatePostData = {
       title,
@@ -65,6 +72,9 @@ const updatePost = async (req, res) => {
       source,
       skintype,
       productUsedTime,
+      username,
+      // userId
+
     };
 
     if (req.file) {

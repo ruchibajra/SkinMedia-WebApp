@@ -20,7 +20,6 @@ require("dotenv").config();
 app.use(express.json());
 
 
-app.use("/uploads", express.static(__dirname + "/uploads")); /**making upload file public as it only take public file */
 
 
 // register and create profile
@@ -28,6 +27,8 @@ app.use('/user', userProfileRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/posts', createPostRoutes);
+app.use("/uploads", express.static(__dirname + "/uploads")); /**making upload file public as it only take public file */
+
 
 
 
