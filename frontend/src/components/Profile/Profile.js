@@ -6,6 +6,7 @@ const Profile = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [bio, setBio] = useState("");
+  const [phone, setPhone] = useState("");
   const [profileImage, setProfileImage] = useState(""); // Add state for profile image
 
   useEffect(() => {
@@ -27,8 +28,10 @@ const Profile = () => {
 
         // Update state with the fetched profile data
         setBio(profileData.bio || "No bio available");
-        setUsername(profileData.user.name || "Username not available");
+        setUsername(profileData.user.username || "Username not available");
         setEmail(profileData.user.email || "Email not available");
+        setPhone(profileData.user.phone || "Phone not available");
+
         setProfileImage(profileData.profileImage || ""); // Set profile image
       } catch (err) {
         setError(err.message);
@@ -55,6 +58,9 @@ const Profile = () => {
           <h1 className="text-2xl font-bold mb-2">{username}</h1>
           <h1 className="text-lg italic w-full flex flex-col items-center underline">
             {email}
+          </h1>
+          <h1 className="text-lg  w-full flex flex-col items-center ">
+            {phone}
           </h1>
           <p className="text-white text-center mb-4">{bio}</p>
           <h3 className="italic text-gray-600 mb-4">Skin Type: Combination Skin</h3>

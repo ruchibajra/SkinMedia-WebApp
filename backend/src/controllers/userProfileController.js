@@ -69,7 +69,7 @@ const getUserProfileById = async (req, res) => {
   try {
     const profile = await UserProfiles.findOne({
       user: req.params.id,
-    }).populate("user", ["name", "email"]);
+    }).populate("user", ["name","username","phone", "email"]);
     if (!profile) {
       return res.status(404).json({ msg: "Profile not found" });
     }

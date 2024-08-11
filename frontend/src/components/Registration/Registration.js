@@ -56,7 +56,7 @@ const Registration = () => {
           }
         );
         toast.success("Registration successful");
-        // Uncomment to navigate after successful registration
+        // Uncomment to navigate afte r successful registration
         // setTimeout(() => {
         //   navigate("/login");
         // }, 2000);
