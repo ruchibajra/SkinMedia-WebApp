@@ -7,7 +7,9 @@ const Profile = () => {
   const [email, setEmail] = useState("");
   const [bio, setBio] = useState("");
   const [phone, setPhone] = useState("");
-  const [profileImage, setProfileImage] = useState(""); // Add state for profile image
+  const [profileImage, setProfileImage] = useState(""); 
+  const [newProfileImage, setNewProfileImage] = useState(null); // State for new profile image
+  const [isEditing, setIsEditing] = useState(false); // State for toggling edit mode
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -19,20 +21,17 @@ const Profile = () => {
           throw new Error("User data not found");
         }
 
-        // Fetch profile data using the user's ID
         const response = await axiosInstance.get(`/api/profile/${user._id}`, {
           headers: { Authorization: token },
         });
 
         const profileData = response.data.profile;
 
-        // Update state with the fetched profile data
         setBio(profileData.bio || "No bio available");
         setUsername(profileData.user.username || "Username not available");
         setEmail(profileData.user.email || "Email not available");
         setPhone(profileData.user.phone || "Phone not available");
-
-        setProfileImage(profileData.profileImage || ""); // Set profile image
+        setProfileImage(profileData.profileImage || ""); 
       } catch (err) {
         setError(err.message);
       }
@@ -41,9 +40,72 @@ const Profile = () => {
     fetchProfile();
   }, []);
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  const handleEditClick = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      if (!token || !user) {
+        throw new Error("User data not found");
+      }
+
+      const updatedProfile = {
+        user: {
+          username,
+          phone,
+          email
+        },
+        bio,
+        profileImage: newProfileImage || profileImage
+      };
+
+      await axiosInstance.put(`/api/profile/update`, updatedProfile, {
+        headers: { Authorization: token },
+      });
+
+      setIsEditing(false);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const handleImageChange = async (e) => {  
+
+    const file = e.target.files[0];
+    if (file) {
+
+      const imageUrl = URL.createObjectURL(file);
+      setProfileImage(imageUrl); // Update the profileImage state with the temporary URL
+
+      const formData = new FormData();
+      formData.append("profileImage", file);
+
+      try {
+        const token = localStorage.getItem("token");
+
+        const response = await axiosInstance.put(`/api/profile/update`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: token,
+          },
+        });
+
+        setNewProfileImage(response.data.imageUrl); // Assuming response contains the URL
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+  };
+
+  // Function to handle image click
+  const handleImageClick = () => {
+    document.getElementById("profileImageInput").click();
+  };
 
   return (
     <div className="ml-96 justify-center bg-white p-6 min-h-screen flex flex-col items-center">
@@ -51,22 +113,79 @@ const Profile = () => {
         {/* Left part start */}
         <div className="w-full md:w-1/4 bg-slate-600 text-white p-6 flex flex-col items-center rounded-lg mb-6 md:mb-0">
           <img
-            className="h-48 w-48 rounded-full border-4 border-slate-300 mb-4"
-            src={profileImage || "https://via.placeholder.com/150"} // Use placeholder if no image
+            className="h-48 w-48 rounded-full border-4 border-slate-300 mb-4 cursor-pointer"
+            src={newProfileImage || profileImage || "https://via.placeholder.com/150"}
             alt="Profile"
+            onClick={handleImageClick}
           />
-          <h1 className="text-2xl font-bold mb-2">{username}</h1>
-          <h1 className="text-lg italic w-full flex flex-col items-center underline">
-            {email}
-          </h1>
-          <h1 className="text-lg  w-full flex flex-col items-center ">
-            {phone}
-          </h1>
-          <p className="text-white text-center mb-4">{bio}</p>
+          <input
+            type="file"
+            id="profileImageInput"
+            style={{ display: "none" }}
+            onChange={handleImageChange}
+          />
+          {isEditing ? (
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Username"
+              className="mb-4 p-2 rounded border text-slate-600"
+            />
+          ) : (
+            <h1 className="text-2xl font-bold mb-2">{username}</h1>
+          )}
+          {isEditing ? (
+            <input
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Username"
+              className="mb-4 p-2 rounded border text-slate-600"
+            />
+          ) : (
+            <h1 className="text-lg italic w-full flex flex-col items-center underline">
+              {email}
+            </h1>
+          )}
+          {isEditing ? (
+            <input
+              type="text"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Phone Number"
+              className="mb-4 p-2 rounded border text-slate-600"
+            />
+          ) : (
+            <h1 className="text-lg w-full flex flex-col items-center">
+              {phone}
+            </h1>
+          )}
+          {isEditing ? (
+            <textarea
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              placeholder="Bio"
+              className="mb-4 p-2 rounded border text-slate-600"
+            />
+          ) : (
+            <p className="text-white text-center mb-4">{bio}</p>
+          )}
           <h3 className="italic text-gray-600 mb-4">Skin Type: Combination Skin</h3>
-          <button className="w-full bg-slate-100 text-slate-600 font-semibold py-2 rounded-lg shadow-md transition-transform transform hover:scale-105">
-            Edit Profile
+          <button
+            onClick={handleEditClick}
+            className="w-full bg-slate-100 text-slate-600 font-semibold py-2 rounded-lg shadow-md transition-transform transform hover:scale-105"
+          >
+            {isEditing ? "Cancel" : "Edit Profile"}
           </button>
+          {isEditing && (
+            <button
+              onClick={handleSave}
+              className="w-full bg-slate-100 text-slate-600 font-semibold py-2 rounded-lg shadow-md transition-transform transform hover:scale-105 mt-2"
+            >
+              Save Changes
+            </button>
+          )}
         </div>
         {/* Left part end */}
 
