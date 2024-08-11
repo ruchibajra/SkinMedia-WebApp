@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 
 const Profile = () => {
+
   return (
     <div className="ml-96  justify-center bg-white p-6 min-h-screen flex flex-col items-center">
       <div className="w-full max-w-6xl bg-gray-100 p-8 rounded-lg shadow-lg flex flex-col md:flex-row">

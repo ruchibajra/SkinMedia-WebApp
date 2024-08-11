@@ -45,10 +45,10 @@ const getDestination = (folderName) => {
 };
 
 // Storage configurations
-// const profileImageStorage = diskStorage({
-//   destination: getDestination("profiles"),
-//   filename,
-// });
+const profileImageStorage = diskStorage({
+  destination: getDestination("profiles"),
+  filename,
+});
 
 // post image storage
 
@@ -58,10 +58,10 @@ const postImageStorage = diskStorage({
 });
 
 // // Multer instances
-// const profileImage = multer({
-//   storage: profileImageStorage,
-//   fileFilter: filter,
-// });
+const profileImage = multer({
+  storage: profileImageStorage,
+  fileFilter: filter,
+});
 
 // // product image 
 // const productImage = multer({
@@ -76,7 +76,7 @@ const postImage = multer({
   });
 
 module.exports = {
-//   profileImage,
+  profileImage,
 //   productImage,
   postImage
 };

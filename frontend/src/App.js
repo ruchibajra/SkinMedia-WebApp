@@ -21,7 +21,7 @@ function App() {
         <div className="flex">
           <Navbar />
           <Routes>
-            <Route path="/" element={<UpdatePostModal />} />
+            <Route path="/" element={<HomeDataComponent />} />
             <Route path="/post" element={<FullPost />} />
             <Route path="/home" element={<HomeDataComponent />} />
             <Route path="/signup" element={<Registration />} />
