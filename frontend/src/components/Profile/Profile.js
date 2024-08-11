@@ -1,6 +1,32 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../../config/axiosConfig";
+const token = localStorage.getItem("token");
 
 const Profile = () => {
+  const [error, setError] = useState(null);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [bio, setBio] = useState("");
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const userId = "66abe1b02f533e2e4b25cafa"; // Replace this with the actual user ID
+        const response = await axiosInstance.get(`/api/profile/${userId}`);
+
+        // Extract data from the response
+        const profileData = response.data.profile;
+        setBio(profileData.bio);
+        setUsername(profileData.user.name);
+        setEmail(profileData.user.email);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   return (
     <div className="ml-96  justify-center bg-white p-6 min-h-screen flex flex-col items-center">
@@ -12,20 +38,24 @@ const Profile = () => {
             src="https://media.licdn.com/dms/image/D4E03AQHh91ri_EZxEQ/profile-displayphoto-shrink_200_200/0/1676103858101?e=2147483647&v=beta&t=mLmyu6IlrNfSfHRZoF0CNS-Ma-x754pKj3eIkRM2fYg"
             alt="Profile"
           />
-          <h1 className="text-2xl font-bold mb-2">Ruchi Bajra</h1>
+          <h1 className="text-2xl font-bold mb-2">{username} </h1>
+
+          <h1 className="text-lg italic w-full flex flex-col items-center underline">
+            {email}{" "}
+          </h1>
           <p className="text-white   text-center mb-4">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis
-            commodi, ab beatae tempora et aperiam reprehenderit laborum minus,
-            corporis eius cumque, distinctio animi in incidunt maiores! Modi sed
-            impedit ad?
+            {bio}
+           
           </p>
-          <h3 className="italic text-gray-600 mb-4">Skin Type: Combination Skin</h3>
+          <h3 className="italic text-gray-600 mb-4">
+            Skin Type: Combination Skin
+          </h3>
           <button className="w-full bg-slate-100 text-slate-600 font-semibold py-2 rounded-lg shadow-md transition-transform transform hover:scale-105">
             Edit Profile
           </button>
         </div>
         {/* Left part end */}
-        
+
         {/* Right part start */}
         <div className="w-full md:w-3/4 p-6 flex flex-col">
           <h3 className="text-lg font-medium mb-4"> Overview</h3>
@@ -41,31 +71,48 @@ const Profile = () => {
           </div>
           {/* Additional profile information or activities */}
           <div className="bg-white p-4 rounded-lg shadow-md">
-
-          <h4 className="text-lg font-medium mb-2">Skin Type</h4>
-            <p className="text-gray-700">
-              Combination Skin
-            </p>
+            <h4 className="text-lg font-medium mb-2">Skin Type</h4>
+            <p className="text-gray-700">Combination Skin</p>
 
             <br />
 
-          <h4 className="text-lg font-medium mb-2">Skin History</h4>
+            <h4 className="text-lg font-medium mb-2">Skin History</h4>
             <p className="text-gray-700">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur in turpis quis eros cursus tincidunt.
-
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quaerat facilis sequi possimus in 
-              adipisci id itaque, numquam sunt! Corrupti, autem. Reiciendis corporis voluptatem accusantium pariatur magnam quo delectus doloremque quia!
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
+              in turpis quis eros cursus tincidunt. Lorem ipsum dolor sit, amet
+              consectetur adipisicing elit. Quaerat facilis sequi possimus in
+              adipisci id itaque, numquam sunt! Corrupti, autem. Reiciendis
+              corporis voluptatem accusantium pariatur magnam quo delectus
+              doloremque quia!
             </p>
 
             <br />
             <p className="text-gray-700">
-              <li> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur in turpis quis eros cursus tincidunt. </li>
-              <li> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur in turpis quis eros cursus tincidunt. </li>
-              <li> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur in turpis quis eros cursus tincidunt. </li>
-              <li> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur in turpis quis eros cursus tincidunt. </li>
-              <li> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur in turpis quis eros cursus tincidunt. </li>
-
-              
+              <li>
+                {" "}
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Curabitur in turpis quis eros cursus tincidunt.{" "}
+              </li>
+              <li>
+                {" "}
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Curabitur in turpis quis eros cursus tincidunt.{" "}
+              </li>
+              <li>
+                {" "}
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Curabitur in turpis quis eros cursus tincidunt.{" "}
+              </li>
+              <li>
+                {" "}
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Curabitur in turpis quis eros cursus tincidunt.{" "}
+              </li>
+              <li>
+                {" "}
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Curabitur in turpis quis eros cursus tincidunt.{" "}
+              </li>
             </p>
           </div>
         </div>
