@@ -7,7 +7,7 @@ import Login from "./components/Login/Login";
 import Registration from "./components/Registration/Registration";
 // import Home from "./components/Home/Home";
 import Popular from "./components/Popular/Popular";
-import HomeDataComponent from "./components/Home/HomeDataComponent";
+import HomeCard from "./components/Home/HomeCard";
 import CategoryIntegration from "./components/Category/Category";
 import CreatePost from "./components/CreatePost/CreatePost";
 import Profile from "./components/Profile/Profile";
@@ -21,9 +21,9 @@ function App() {
         <div className="flex">
           <Navbar />
           <Routes>
-            <Route path="/" element={<HomeDataComponent />} />
+            <Route path="/" element={<Login />} />
             <Route path="/post" element={<FullPost />} />
-            <Route path="/home" element={<HomeDataComponent />} />
+            <Route path="/home" element={<HomeCard />} />
             <Route path="/signup" element={<Registration />} />
             <Route path="/login" element={<Login />} />
             <Route path="/popular" element={<Popular />} />

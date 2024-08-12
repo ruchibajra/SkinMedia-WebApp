@@ -68,7 +68,7 @@ const HomeCard = (props) => {
       <h1>Welcome, {username} </h1>
 
       {/* TOPIC SECTION START */}
-      <div className="flex flex-wrap gap-4 mb-8">
+      {/* <div className="flex flex-wrap gap-4 mb-8">
         {props.topicData.map((topic, index) => (
           <div
             key={index}
@@ -84,7 +84,7 @@ const HomeCard = (props) => {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
       {/* TOPIC SECTION END */}
 
       {/* SECOND PART SECTION START */}
@@ -245,7 +245,7 @@ const HomeCard = (props) => {
         {/* POST SECTION END */}
 
         {/* POPULAR COMMUNITIES SECTION START */}
-        <div className="w-full md:w-96 bg-gray-200 p-4 rounded-lg shadow-md">
+        {/* <div className="w-full md:w-96 bg-gray-200 p-4 rounded-lg shadow-md">
           <h1 className="text-xl font-semibold mb-4">Popular Communities</h1>
           {props.popularUserData.map((popularUser, index) => (
             <div key={index} className="flex items-center mb-4">
@@ -261,7 +261,7 @@ const HomeCard = (props) => {
           <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">
             See More
           </button>
-        </div>
+        </div> */}
         {/* POPULAR COMMUNITIES SECTION END */}
       </div>
     </div>
