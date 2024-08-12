@@ -2,6 +2,7 @@
 
 const domain = "http://localhost:5000";
 const UserProfiles = require("../models/userProfileModel");
+const User = require("../models/authUserModel")
 
 // Helper function to send error responses
 const sendErrorResponse = (res, error) => {
@@ -12,24 +13,38 @@ const sendErrorResponse = (res, error) => {
 const updateUserProfile = async (req, res) => {
   try {
     const { bio } = req.body;
+    const {user} = req.body;
     let updateData = { bio };
 
+    // check for files
     if (req.file) {
       const profileImage = `${domain}/uploads/profiles/${req.file.filename}`;
       updateData.profileImage = profileImage;
     }
 
+    // update user profile
     const profile = await UserProfiles.findOneAndUpdate(
       { user: req.user.id },
       updateData,
       { new: true, runValidators: true }
     );
 
+    // handle profile not found
     if (!profile) {
       return res.status(404).json({ msg: "Profile not found" });
     }
 
-    res.status(200).json({ profile });
+    // update user
+    let userUpdate = await User.findOneAndUpdate(
+      {_id:req.user.id},
+      user
+    )
+
+    // handle user not found
+    if(!userUpdate)return res.status(404).json({ msg: "User not found" });
+
+    // send response
+    res.status(200).json({ profile , userUpdate});
   } catch (error) {
     sendErrorResponse(res, error);
   }
