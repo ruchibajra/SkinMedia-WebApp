@@ -79,7 +79,7 @@ const updatePost = async (req, res) => {
 
     if (req.file) {
       const productImage = `${domain}/uploads/posts/${req.file.filename}`;
-      updateData.productImage = productImage;
+      updatePostData.productImage = productImage;
     }
 
     const post = await Post.findByIdAndUpdate(req.params.id, updatePostData, {
