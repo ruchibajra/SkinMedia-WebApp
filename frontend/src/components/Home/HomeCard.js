@@ -30,7 +30,7 @@ const HomeCard = (props) => {
 
   // Function to handle post update
   const handleUpdate = (post) => {
-    navigate("/createPost", { state: { post } });
+    navigate("/createPost", { state: { post, mode: 'update' } });
   };
 
   // Function to handle post deletion

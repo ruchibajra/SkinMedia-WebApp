@@ -7,6 +7,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 const CreatePost = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { post, mode } = location.state || {};
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -74,15 +76,30 @@ const CreatePost = () => {
     console.log("FormData:", formData);
 
     try {
-      const response = await axiosInstance.post("/api/posts", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      toast.success(response.data.msg);
-      console.log("Product added successfully:", response.data);
+      let response;
+      
+      if (mode === 'update') {
+        // Update existing post
+        response = await axiosInstance.patch(`/api/posts/update/${post._id}`, data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        toast.success("Post updated successfully!");
+      } else {
+        // Create new post
+        response = await axiosInstance.post("/api/posts", data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        toast.success("Post created successfully!");
+      }
+  
+      console.log("Response:", response.data);
+      navigate("/home"); // Navigate to the home page or wherever appropriate
     } catch (error) {
-      console.error("Error adding product:", error);
+      console.error("Error:", error);
       toast.error(error.response?.data?.msg || "An error occurred");
     }
   };
@@ -90,7 +107,11 @@ const CreatePost = () => {
   return (
     <div className="ml-56 container mx-auto p-4">
       <ToastContainer />
-      <h1 className="text-2xl font-bold mb-4 mt-14">Create Post</h1> <br />
+      <h1 className="text-2xl font-bold mb-4 mt-14">
+        {" "}
+        {mode === "update" ? "Update Post" : "Create Post"}
+      </h1>{" "}
+      <br />
       <h1 className="text-xl mb-4">
         Welcome, {user ? user.username : "Guest"}
       </h1>
@@ -127,27 +148,28 @@ const CreatePost = () => {
           />
         </div>
         <div className="mb-4">
-      <label className="block text-gray-700">Product Image:</label>
-      <input
-        type="file"
-        name="productImage"
-        onChange={handleFileChange}
-        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-      />
-      {formData.productImage && typeof formData.productImage === "object" ? (
-        <img
-          src={URL.createObjectURL(formData.productImage)}
-          alt="Product"
-          className="mt-4 w-32 h-32 object-cover"
-        />
-      ) : (
-        <img
-          src={formData.productImage}
-          alt="Product"
-          className="mt-4 w-32 h-32 object-cover"
-        />
-      )}
-    </div>
+          <label className="block text-gray-700">Product Image:</label>
+          <input
+            type="file"
+            name="productImage"
+            onChange={handleFileChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+          {formData.productImage &&
+          typeof formData.productImage === "object" ? (
+            <img
+              src={URL.createObjectURL(formData.productImage)}
+              alt="Product"
+              className="mt-4 w-32 h-32 object-cover"
+            />
+          ) : (
+            <img
+              src={formData.productImage}
+              alt="Product"
+              className="mt-4 w-32 h-32 object-cover"
+            />
+          )}
+        </div>
         <div className="mb-4">
           <label className="block text-gray-700">Source</label>
           <input
@@ -182,8 +204,8 @@ const CreatePost = () => {
           type="submit"
           className="bg-blue-500 text-white py-2 px-4 rounded"
         >
-          Create Post
-        </button>
+          {mode === 'update' ? 'Save Changes' : 'Create Post'}
+          </button>
       </form>
     </div>
   );
