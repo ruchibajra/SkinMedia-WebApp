@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { postImage } = require("../middleware/uploadMiddleware");
-const {createPost, updatePost, deletePost, getPosts, getPost} = require ('../controllers/createPostController');
+const {createPost, updatePost, deletePost, getPosts, getPost, addComment, getComments} = require ('../controllers/createPostController');
 const authMiddleware = require('../middleware/authMiddleware');
 const authorizeRole = require('../middleware/authorizationMiddleware');
 
@@ -10,6 +10,11 @@ router.patch('/update/:id', postImage.single('productImage'), updatePost);
 router.delete('/delete/:id', deletePost);
 router.get('/', getPosts);
 router.get('/:id', getPost);
+router.post('/posts/comments', authMiddleware, addComment);
+router.get('/posts/:postId/comments', getComments);
+
+
+
 
 
 

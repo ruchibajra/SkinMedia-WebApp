@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = (props) => {
@@ -50,22 +50,11 @@ const Navbar = (props) => {
             {" "}
             <i className="ri-home-4-line mr-2"></i>Home
           </Link>
-          <Link className="navbar-brand" to="/popular">
-            {" "}
-            <i className="ri-search-line mr-2"></i>Popular
-          </Link>
           <Link className="navbar-brand" to="/topics">
             {" "}
             <i className="ri-book-open-line mr-2"></i>Topics
           </Link>
-          <Link className="navbar-brand" to="/qa">
-            {" "}
-            <i className="ri-notification-3-line mr-2"></i>Q/Ans
-          </Link>
-          <Link className="navbar-brand" to="/communities">
-            {" "}
-            <i className="ri-add-box-line mr-2"></i>Communities
-          </Link>
+
           <Link className="navbar-brand" to="/profile">
             {" "}
             <i className="ri-user-line mr-2"></i>Profile

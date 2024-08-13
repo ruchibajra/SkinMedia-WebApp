@@ -10,6 +10,10 @@ const HomeCard = (props) => {
   const [posts, setPosts] = useState([]);
   const [dropdownIndex, setDropdownIndex] = useState(null);
   const navigate = useNavigate();
+  const [likedPosts, setLikedPosts] = useState(new Set());
+
+  const [commentText, setCommentText] = useState({});
+  const [comments, setComments] = useState({});
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -30,7 +34,7 @@ const HomeCard = (props) => {
 
   // Function to handle post update
   const handleUpdate = (post) => {
-    navigate("/createPost", { state: { post, mode: 'update' } });
+    navigate("/createPost", { state: { post, mode: "update" } });
   };
 
   // Function to handle post deletion
@@ -59,8 +63,91 @@ const HomeCard = (props) => {
   };
 
   // Function to handle comment section toggle
-  const handleComment = (index) => {
-    setActivePostIndex(activePostIndex === index ? null : index);
+
+  const handleToggleLike = async (postId) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      let response;
+      if (likedPosts.has(postId)) {
+        // Unlike post if already liked
+        response = await axios.patch(
+          `http://localhost:5000/api/posts/unlike/${postId}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setLikedPosts((prevLikedPosts) => {
+          const updatedLikedPosts = new Set(prevLikedPosts);
+          updatedLikedPosts.delete(postId);
+          return updatedLikedPosts;
+        });
+      } else {
+        // Like post if not liked
+        response = await axios.patch(
+          `http://localhost:5000/api/posts/like/${postId}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setLikedPosts((prevLikedPosts) => {
+          const updatedLikedPosts = new Set(prevLikedPosts);
+          updatedLikedPosts.add(postId);
+          return updatedLikedPosts;
+        });
+      }
+
+      toast.success(response.data.msg);
+      fetchPosts(); // Fetch posts again to get updated like counts
+    } catch (error) {
+      console.error("Error toggling like status:", error);
+      toast.error(error.response.data.msg);
+    }
+  };
+
+  const fetchComments = async (postId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/posts/${postId}/comments`
+      );
+      setComments((prev) => ({ ...prev, [postId]: response.data.comments }));
+    } catch (error) {
+      console.error("Error fetching comments: ", error);
+    }
+  };
+
+  const handleCommentChange = (postId, text) => {
+    setCommentText((prev) => ({ ...prev, [postId]: text }));
+  };
+
+  const handlePostComment = async (postId) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        `http://localhost:5000/api/posts/comments`,
+        { postId, text: commentText[postId] },
+        { headers: { Authorization: token } }
+      );
+      setCommentText((prev) => ({ ...prev, [postId]: "" }));
+      fetchComments(postId); // Refresh comments
+    } catch (error) {
+      console.error("Error posting comment: ", error);
+    }
+  };
+
+  const handleCommentSectionToggle = (index) => {
+    if (activePostIndex === index) {
+      setActivePostIndex(null);
+    } else {
+      setActivePostIndex(index);
+      fetchComments(posts[index]._id); // Fetch comments for the selected post
+    }
   };
 
   return (
@@ -94,7 +181,7 @@ const HomeCard = (props) => {
           {posts.map((post, index) => (
             <div
               key={post._id}
-              className="bg-white border border-gray-300 rounded-lg shadow-md mb-6 cursor-pointer hover:shadow-lg transition-shadow"
+              className="bg-white w-3/4  border border-gray-300 rounded-lg shadow-md mb-6 cursor-pointer hover:shadow-lg transition-shadow"
             >
               <div className="flex items-center p-4 border-b border-gray-300">
                 <div className="h-10 w-10 rounded-full bg-gray-400"></div>
@@ -149,23 +236,79 @@ const HomeCard = (props) => {
                   </div>
                 </div>
                 <img
-                  className="w-full h-64 object-cover rounded-lg mb-4"
+                  className="w-full h-96 object-cover rounded-lg mb-4"
                   src={post.productImage}
                   alt="Post"
                 />
                 <div className="flex flex-col text-gray-600">
                   <div className="flex justify-between">
-                    <button className="flex items-center gap-1 h-9 w-36 justify-center bg-gray-200 rounded-full px-4 py-1 text-sm">
-                      <i className="ri-thumb-up-line"></i>
+                    <button
+                      onClick={() => handleToggleLike(post._id)}
+                      className={`flex items-center gap-1 h-9 w-36 justify-center rounded-full px-4 py-1 text-sm ${
+                        likedPosts.has(post._id)
+                          ? "bg-red-500 text-white"
+                          : "bg-gray-200"
+                      }`}
+                    >
+                      <i
+                        className={`ri-thumb-up-line ${
+                          likedPosts.has(post._id) ? "text-white" : ""
+                        }`}
+                      ></i>
                       {post.likes}
                     </button>
-                    <button
-                      onClick={() => handleComment(index)}
-                      className="flex items-center gap-1 h-9 w-36 justify-center bg-gray-200 rounded-full px-4 py-1 text-sm"
-                    >
-                      <i className="ri-chat-2-line"></i>
-                      {post.comment}
-                    </button>
+
+
+
+
+
+
+
+                    <div className="mt-4">
+                      <button onClick={() => handleCommentSectionToggle(index)}>
+                        {activePostIndex === index
+                          ? "Hide Comments"
+                          : "Show Comments"}
+                      </button>
+
+                      {activePostIndex === index && (
+                        <div>
+                          <div className="mt-2">
+                            <textarea
+                              value={commentText[post._id] || ""}
+                              onChange={(e) =>
+                                handleCommentChange(post._id, e.target.value)
+                              }
+                              placeholder="Write a comment..."
+                              className="w-full border border-gray-300 rounded-lg p-2"
+                            />
+                            <button
+                              onClick={() => handlePostComment(post._id)}
+                              className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg"
+                            >
+                              Post Comment
+                            </button>
+                          </div>
+
+                          <div className="mt-4">
+                            {comments[post._id]?.map((comment) => (
+                              <div
+                                key={comment._id}
+                                className="flex items-start mb-2"
+                              >
+                                <div className="h-8 w-8 rounded-full bg-gray-400"></div>
+                                <div className="ml-2">
+                                  <p className="font-semibold">
+                                    {comment.username}
+                                  </p>
+                                  <p>{comment.text}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                     <button className="flex items-center gap-1 h-9 w-36 justify-center bg-gray-200 rounded-full px-4 py-1 text-sm">
                       <i className="ri-share-forward-line"></i>
                       {post.shares}
@@ -173,21 +316,21 @@ const HomeCard = (props) => {
                   </div>
 
                   {/* ADD A COMMENT PART */}
-                  <div>
-                    {activePostIndex === index && (
-                      <div className="mb-4 mt-4">
-                        <h2 className="text-xl font-semibold mb-2">
+                  {/* <div> */}
+                    {/* {activePostIndex === index && (
+                      <div className="mb-4 mt-4"> */}
+                        {/* <h2 className="text-xl font-semibold mb-2">
                           Post a Reply
                         </h2>
                         <input
                           className="w-full h-20 border-2 border-gray-300 rounded-lg p-2"
                           type="text"
                           placeholder="Write a response to this post"
-                        />
+                        /> */}
 
-                        <div className="mt-4 space-y-4">
+                        {/* <div className="mt-4 space-y-4"> */}
                           {/* Reply 1 */}
-                          <div className="flex items-start gap-3">
+                          {/* <div className="flex items-start gap-3">
                             <div className="h-8 w-8 rounded-full bg-red-500"></div>
                             <div className="flex-1">
                               <div className="flex items-center justify-between mb-2">
@@ -208,10 +351,10 @@ const HomeCard = (props) => {
                                 DISEASE
                               </p>
                             </div>
-                          </div>
+                          </div> */}
 
                           {/* Reply 2 */}
-                          <div className="flex items-start gap-3">
+                          {/* <div className="flex items-start gap-3">
                             <div className="h-8 w-8 rounded-full bg-red-500"></div>
                             <div className="flex-1">
                               <div className="flex items-center justify-between mb-2">
@@ -232,11 +375,11 @@ const HomeCard = (props) => {
                                 DISEASE
                               </p>
                             </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                          </div> */}
+                        {/* </div> */}
+                      {/* // </div> */}
+                    {/* // )} */}
+                  {/* </div> */}
                 </div>
               </div>
             </div>

@@ -1,6 +1,22 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
+
+const commentSchema = new Schema({
+  username: {
+    type: String,
+    required: true,
+  },
+  text: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const createPostSchema = new Schema({
   title: {
     type: String,
@@ -42,6 +58,8 @@ const createPostSchema = new Schema({
     ref: "User",
     required: true,
   },
+
+  comments: [commentSchema], // Embed comments
 
   // userId: {
   //   type: String,

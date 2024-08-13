@@ -17,7 +17,7 @@ const createPost = async (req, res) => {
       source,
       skintype,
       productUsedTime,
-      username
+      username,
     } = req.body;
 
     let postData = {
@@ -27,7 +27,7 @@ const createPost = async (req, res) => {
       source,
       skintype,
       productUsedTime,
-      username
+      username,
     };
     // console.log(req.body);
     // console.log(req.file);
@@ -61,9 +61,6 @@ const updatePost = async (req, res) => {
       productUsedTime,
       username,
       // userId
-
-      
-
     } = req.body;
     let updatePostData = {
       title,
@@ -74,7 +71,6 @@ const updatePost = async (req, res) => {
       productUsedTime,
       username,
       // userId
-
     };
 
     if (req.file) {
@@ -110,9 +106,7 @@ const deletePost = async (req, res) => {
       return res.status(404).json({ msg: "Post not found" });
     }
 
-    res
-      .status(200)
-      .json({ msg: "Post deleted successfully", success: true });
+    res.status(200).json({ msg: "Post deleted successfully", success: true });
   } catch (error) {
     sendErrorResponse(res, error);
   }
@@ -122,14 +116,11 @@ const deletePost = async (req, res) => {
 const getPosts = async (req, res) => {
   try {
     const posts = await Post.find();
-    return res
-      .status(200)
-      .json({ msg: "posts fetched successfully", posts });
+    return res.status(200).json({ msg: "posts fetched successfully", posts });
   } catch (error) {
     return res.status(500).json({ msg: error.message });
   }
 };
-
 
 // controller for getting a single post through id
 
@@ -139,12 +130,53 @@ const getPost = async (req, res) => {
     if (!post) {
       return res.status(404).json({ msg: "Post not found" });
     }
-    return res
-      .status(200)
-      .json({ msg: "Post fetched successfully", post });
+    return res.status(200).json({ msg: "Post fetched successfully", post });
   } catch (error) {
     return res.status(500).json({ msg: error.message });
   }
 };
 
-module.exports = { createPost, updatePost, deletePost, getPosts, getPost };
+
+// Add a comment to a post
+const addComment = async (req, res) => {
+  try {
+    const { postId, text } = req.body;
+    const username = req.user.username; // Assuming you're using authentication middleware to set req.user
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ msg: 'Post not found' });
+    }
+
+    post.comments.push({ username, text });
+    await post.save();
+
+    res.status(200).json({
+      msg: 'Comment added successfully',
+      post,
+    });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+// Get comments for a specific post
+const getComments = async (req, res) => {
+  try {
+    const postId = req.params.postId;
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ msg: 'Post not found' });
+    }
+
+    res.status(200).json({
+      msg: 'Comments fetched successfully',
+      comments: post.comments,
+    });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+module.exports = { createPost, updatePost, deletePost, getPosts, getPost, addComment, getComments};
