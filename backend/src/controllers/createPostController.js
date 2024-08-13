@@ -136,27 +136,52 @@ const getPost = async (req, res) => {
   }
 };
 
-
-// Add a comment to a post
+// Function to add a comment to a post
 const addComment = async (req, res) => {
   try {
-    const { postId, text } = req.body;
-    const username = req.user.username; // Assuming you're using authentication middleware to set req.user
 
-    const post = await Post.findById(postId);
-    if (!post) {
-      return res.status(404).json({ msg: 'Post not found' });
+    console.log('Request body:', req.body); // Log the request body
+    console.log('User data:', req.user); // Log user data
+
+    // Check if req.user is properly set and contains username
+    if (!req.user || !req.user.username) {
+      return res
+        .status(400)
+        .json({ msg: "User data is missing or incomplete" });
     }
 
-    post.comments.push({ username, text });
+    // Get the post ID and comment from the request body
+    const { postId, text } = req.body; // Change `comment` to `text`
+
+    // Validate that postId and comment are provided
+    if (!postId || !text) { // Check for `text` here
+      return res.status(400).json({ msg: "Post ID and comment are required" });
+    }
+
+    // Find the post by ID
+    const post = await Post.findById(postId);
+
+    // Check if the post exists
+    if (!post) {
+      return res.status(404).json({ msg: "Post not found" });
+    }
+
+    // Add the comment to the post
+    post.comments.push({
+      username: req.user.username,
+      text,
+      createdAt: new Date(),
+    });
+
+    // Save the post with the new comment
     await post.save();
 
-    res.status(200).json({
-      msg: 'Comment added successfully',
-      post,
-    });
-  } catch (error) {
-    res.status(500).json({ msg: error.message });
+    // Send a success response
+    res.status(200).json({ msg: "Comment added successfully", post });
+  } catch (err) {
+    // Log the error and send a server error response
+    console.error("Error adding comment:", err);
+    res.status(500).json({ msg: "Server error" });
   }
 };
 
@@ -167,11 +192,11 @@ const getComments = async (req, res) => {
 
     const post = await Post.findById(postId);
     if (!post) {
-      return res.status(404).json({ msg: 'Post not found' });
+      return res.status(404).json({ msg: "Post not found" });
     }
 
     res.status(200).json({
-      msg: 'Comments fetched successfully',
+      msg: "Comments fetched successfully",
       comments: post.comments,
     });
   } catch (error) {
@@ -179,4 +204,12 @@ const getComments = async (req, res) => {
   }
 };
 
-module.exports = { createPost, updatePost, deletePost, getPosts, getPost, addComment, getComments};
+module.exports = {
+  createPost,
+  updatePost,
+  deletePost,
+  getPosts,
+  getPost,
+  addComment,
+  getComments,
+};

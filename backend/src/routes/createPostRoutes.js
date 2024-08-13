@@ -10,8 +10,8 @@ router.patch('/update/:id', postImage.single('productImage'), updatePost);
 router.delete('/delete/:id', deletePost);
 router.get('/', getPosts);
 router.get('/:id', getPost);
-router.post('/posts/comments', authMiddleware, addComment);
-router.get('/posts/:postId/comments', getComments);
+router.post('/comments', authMiddleware,  addComment);
+router.get('/:postId/comments', getComments);
 
 
 
