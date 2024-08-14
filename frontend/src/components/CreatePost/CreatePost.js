@@ -20,11 +20,18 @@ const CreatePost = () => {
   });
 
   const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
+
   useEffect(() => {
     // Retrieve user information from localStorage or context
     const userInfo = JSON.parse(localStorage.getItem("user"));
     if (userInfo) {
       setUser(userInfo);
+    }
+
+    const profileInfo = JSON.parse(localStorage.getItem("profile"));
+    if (profileInfo) {
+      setProfile(profileInfo);
     }
 
     if (location.state && location.state.post) {
@@ -66,8 +73,8 @@ const CreatePost = () => {
     data.append("source", formData.source);
     data.append("skintype", formData.skintype);
     data.append("productUsedTime", formData.productUsedTime);
-    data.append("username", user.username); // Add user details
-    // data.append("userId", user.id); // Add user ID if needed
+    data.append("username", user.username); 
+    data.append("profileImage", profile.profileImage); // Ensure profile image is included
 
     // console.log(user.username);
     console.log(data);
@@ -113,7 +120,10 @@ const CreatePost = () => {
       </h1>{" "}
       <br />
       <h1 className="text-xl mb-4">
-        Welcome, {user ? user.username : "Guest"}
+        Welcome, {user ? user.username : "Guest"} <br />
+
+        ProfileImage: {profile ? profile.profileImage : "No Image"}
+
       </h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">

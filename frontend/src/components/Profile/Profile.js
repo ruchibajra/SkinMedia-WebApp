@@ -7,13 +7,13 @@ const Profile = () => {
   const [email, setEmail] = useState("");
   const [bio, setBio] = useState("");
   const [phone, setPhone] = useState("");
-  const [profileImage, setProfileImage] = useState(""); 
-  const [newProfileImage, setNewProfileImage] = useState(null); // State for new profile image
-  const [isEditing, setIsEditing] = useState(false); // State for toggling edit mode
+  const [profileImage, setProfileImage] = useState("");
+  const [newProfileImage, setNewProfileImage] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
-      try { 
+      try {
         const token = localStorage.getItem("token");
         const user = JSON.parse(localStorage.getItem("user"));
 
@@ -31,7 +31,10 @@ const Profile = () => {
         setUsername(profileData.user.username || "Username not available");
         setEmail(profileData.user.email || "Email not available");
         setPhone(profileData.user.phone || "Phone not available");
-        setProfileImage(profileData.profileImage || ""); 
+        setProfileImage(profileData.profileImage || "");
+
+        // Save profileImage to localStorage
+        localStorage.setItem("profileImage", profileData.profileImage || "");
       } catch (err) {
         setError(err.message);
       }
@@ -58,15 +61,18 @@ const Profile = () => {
         user: {
           username,
           phone,
-          email
+          email,
         },
         bio,
-        profileImage: newProfileImage || profileImage
+        profileImage: newProfileImage || profileImage,
       };
 
       await axiosInstance.put(`/api/profile/update`, updatedProfile, {
         headers: { Authorization: token },
       });
+
+      // Update profileImage in localStorage after save
+      localStorage.setItem("profileImage", newProfileImage || profileImage);
 
       setIsEditing(false);
     } catch (err) {
@@ -74,13 +80,11 @@ const Profile = () => {
     }
   };
 
-  const handleImageChange = async (e) => {  
-
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-
       const imageUrl = URL.createObjectURL(file);
-      setProfileImage(imageUrl); // Update the profileImage state with the temporary URL
+      setProfileImage(imageUrl);
 
       const formData = new FormData();
       formData.append("profileImage", file);
@@ -88,14 +92,23 @@ const Profile = () => {
       try {
         const token = localStorage.getItem("token");
 
-        const response = await axiosInstance.put(`/api/profile/update`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: token,
-          },
-        });
+        const response = await axiosInstance.put(
+          `/api/profile/update`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: token,
+            },
+          }
+        );
 
         setNewProfileImage(response.data.imageUrl); // Assuming response contains the URL
+
+        // Save the new profile image URL to localStorage
+        localStorage.setItem("profileImage", response.data.imageUrl);
+        console.log(localStorage.getItem("profileImage"));
+
       } catch (err) {
         setError(err.message);
       }
@@ -114,7 +127,11 @@ const Profile = () => {
         <div className="w-full md:w-1/4 bg-slate-600 text-white p-6 flex flex-col items-center rounded-lg mb-6 md:mb-0">
           <img
             className="h-48 w-48 rounded-full border-4 border-slate-300 mb-4 cursor-pointer"
-            src={newProfileImage || profileImage || "https://via.placeholder.com/150"}
+            src={
+              newProfileImage ||
+              profileImage ||
+              "https://via.placeholder.com/150"
+            }
             alt="Profile"
             onClick={handleImageClick}
           />
@@ -171,7 +188,9 @@ const Profile = () => {
           ) : (
             <p className="text-white text-center mb-4">{bio}</p>
           )}
-          <h3 className="italic text-gray-600 mb-4">Skin Type: Combination Skin</h3>
+          <h3 className="italic text-gray-600 mb-4">
+            Skin Type: Combination Skin
+          </h3>
           <button
             onClick={handleEditClick}
             className="w-full bg-slate-100 text-slate-600 font-semibold py-2 rounded-lg shadow-md transition-transform transform hover:scale-105"
@@ -211,17 +230,36 @@ const Profile = () => {
 
             <h4 className="text-lg font-medium mb-2">Skin History</h4>
             <p className="text-gray-700">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur in turpis quis eros cursus tincidunt.
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quaerat facilis sequi possimus in adipisci id itaque, numquam sunt! Corrupti, autem. Reiciendis corporis voluptatem accusantium pariatur magnam quo delectus doloremque quia!
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
+              in turpis quis eros cursus tincidunt. Lorem ipsum dolor sit, amet
+              consectetur adipisicing elit. Quaerat facilis sequi possimus in
+              adipisci id itaque, numquam sunt! Corrupti, autem. Reiciendis
+              corporis voluptatem accusantium pariatur magnam quo delectus
+              doloremque quia!
             </p>
 
             <br />
             <p className="text-gray-700">
-              <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur in turpis quis eros cursus tincidunt.</li>
-              <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur in turpis quis eros cursus tincidunt.</li>
-              <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur in turpis quis eros cursus tincidunt.</li>
-              <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur in turpis quis eros cursus tincidunt.</li>
-              <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur in turpis quis eros cursus tincidunt.</li>
+              <li>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Curabitur in turpis quis eros cursus tincidunt.
+              </li>
+              <li>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Curabitur in turpis quis eros cursus tincidunt.
+              </li>
+              <li>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Curabitur in turpis quis eros cursus tincidunt.
+              </li>
+              <li>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Curabitur in turpis quis eros cursus tincidunt.
+              </li>
+              <li>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Curabitur in turpis quis eros cursus tincidunt.
+              </li>
             </p>
           </div>
         </div>

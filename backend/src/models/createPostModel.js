@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-
 const commentSchema = new Schema({
   username: {
     type: String,
@@ -42,12 +41,12 @@ const createPostSchema = new Schema({
     type: String,
     required: true,
   },
-  
+
   skintype: {
     type: String,
     required: true,
-  },  
-  
+  },
+
   productUsedTime: {
     type: String,
     required: true,
@@ -60,11 +59,6 @@ const createPostSchema = new Schema({
   },
 
   comments: [commentSchema], // Embed comments
-
-  // userId: {
-  //   type: String,
-  //   required: true,
-  // },
 });
 
 const Post = mongoose.model("Post", createPostSchema);

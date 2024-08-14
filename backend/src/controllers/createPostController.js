@@ -28,6 +28,7 @@ const createPost = async (req, res) => {
       skintype,
       productUsedTime,
       username,
+
     };
     // console.log(req.body);
     // console.log(req.file);
@@ -60,8 +61,8 @@ const updatePost = async (req, res) => {
       skintype,
       productUsedTime,
       username,
-      // userId
     } = req.body;
+
     let updatePostData = {
       title,
       description,
@@ -70,7 +71,6 @@ const updatePost = async (req, res) => {
       skintype,
       productUsedTime,
       username,
-      // userId
     };
 
     if (req.file) {
@@ -204,6 +204,28 @@ const getComments = async (req, res) => {
   }
 };
 
+// Add this to your controller file
+const deleteComment = async (req, res) => {
+  try {
+    const { postId, commentId } = req.params;
+
+    // Find the post by ID
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ msg: "Post not found" });
+    }
+
+    // Remove the comment by ID
+    post.comments = post.comments.filter(comment => comment._id.toString() !== commentId);
+    await post.save();
+
+    res.status(200).json({ msg: "Comment deleted successfully", post });
+  } catch (error) {
+    sendErrorResponse(res, error);
+  }
+};
+
 module.exports = {
   createPost,
   updatePost,
@@ -212,4 +234,5 @@ module.exports = {
   getPost,
   addComment,
   getComments,
+  deleteComment,
 };

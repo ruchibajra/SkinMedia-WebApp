@@ -17,8 +17,6 @@ const userProfileSchema = new mongoose.Schema({
     profileImage:{
         type: String
     },
-
-    // add more
 });
 
 module.exports = mongoose.model('Profile', userProfileSchema );
