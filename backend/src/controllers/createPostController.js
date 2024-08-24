@@ -28,7 +28,6 @@ const createPost = async (req, res) => {
       skintype,
       productUsedTime,
       username,
-
     };
     // console.log(req.body);
     // console.log(req.file);
@@ -138,9 +137,8 @@ const getPost = async (req, res) => {
 // Function to add a comment to a post
 const addComment = async (req, res) => {
   try {
-
-    console.log('Request body:', req.body); // Log the request body
-    console.log('User data:', req.user); // Log user data
+    console.log("Request body:", req.body); // Log the request body
+    console.log("User data:", req.user); // Log user data
 
     // Check if req.user is properly set and contains username
     if (!req.user || !req.user.username) {
@@ -153,7 +151,8 @@ const addComment = async (req, res) => {
     const { postId, text } = req.body; // Change `comment` to `text`
 
     // Validate that postId and comment are provided
-    if (!postId || !text) { // Check for `text` here
+    if (!postId || !text) {
+      // Check for `text` here
       return res.status(400).json({ msg: "Post ID and comment are required" });
     }
 
@@ -227,75 +226,76 @@ const deleteComment = async (req, res) => {
 
 const likePost = async (req, res) => {
   try {
-
-    console.log('User likePost from req.user:', req.user); // Log user data
+    console.log("User likePost from req.user:", req.user); // Log user data
 
     const { id } = req.params;
-    
+
     if (!req.user) {
-      return res.status(401).json({ msg: 'User not authenticated' });
+      return res.status(401).json({ msg: "User not authenticated" });
     }
 
- 
     const { username } = req.user; // Safe to destructure now
-    console.log('Username ho hai:', username);
-
+    console.log("Username ho hai:", username);
 
     // Find the post by ID
     const post = await Post.findById(id);
     if (!post) {
-      return res.status(404).json({ msg: 'Post not found' });
+      return res.status(404).json({ msg: "Post not found" });
     }
 
     if (post.likes.includes(username)) {
-      return res.status(400).json({ msg: 'Post already liked' });
+      return res.status(400).json({ msg: "Post already liked" });
     }
 
     post.likes.push(username);
     await post.save();
 
-    res.status(200).json({ msg: 'Post liked successfully', likes: post.likes.length });
+    res
+      .status(200)
+      .json({ msg: "Post liked successfully", likes: post.likes.length });
   } catch (error) {
-    console.error('Error liking post:', error);
-    res.status(500).json({ msg: 'Server error' });
+    console.error("Error liking post:", error);
+    res.status(500).json({ msg: "Server error" });
   }
 };
+
+
 
 const unlikePost = async (req, res) => {
   try {
     const { id } = req.params;
 
     if (!req.user) {
-      return res.status(401).json({ msg: 'User not authenticated' });
+      return res.status(401).json({ msg: "User not authenticated" });
     }
 
-    console.log('User from req:', req.user); // Add this line for debugging
-
+    console.log("User from req:", req.user); // Add this line for debugging
 
     const { username } = req.user; // Safe to destructure now
 
     // Find the post by ID
     const post = await Post.findById(id);
     if (!post) {
-      return res.status(404).json({ msg: 'Post not found' });
+      return res.status(404).json({ msg: "Post not found" });
     }
 
     // Check if the user has already liked the post
     if (!post.likes.includes(username)) {
-      return res.status(400).json({ msg: 'Post not liked by user' });
+      return res.status(400).json({ msg: "Post not liked by user" });
     }
 
     // Remove user from post's likes
-    post.likes = post.likes.filter(user => user !== username);
+    post.likes = post.likes.filter((user) => user !== username);
     await post.save();
 
-    res.status(200).json({ msg: 'Post unliked successfully', likes: post.likes.length });
+    res
+      .status(200)
+      .json({ msg: "Post unliked successfully", likes: post.likes.length });
   } catch (error) {
-    console.error('Error unliking post:', error);
-    res.status(500).json({ msg: 'Server error' });
+    console.error("Error unliking post:", error);
+    res.status(500).json({ msg: "Server error" });
   }
 };
-
 
 module.exports = {
   createPost,
@@ -307,5 +307,5 @@ module.exports = {
   getComments,
   deleteComment,
   likePost,
-  unlikePost
+  unlikePost,
 };

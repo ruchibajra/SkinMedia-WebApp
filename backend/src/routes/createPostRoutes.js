@@ -14,7 +14,7 @@ router.post('/comments', authMiddleware,  addComment);
 router.get('/:postId/comments', getComments);
 router.delete('/:postId/comments/:commentId', deleteComment);
 router.patch('/:postId/like', authMiddleware, likePost);
-router.patch('/unlike/:id', authMiddleware, unlikePost);
+router.patch("/:postId/unlike", authMiddleware, unlikePost);
 
 
 
