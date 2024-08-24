@@ -10,7 +10,6 @@ const HomeCard = (props) => {
   const [posts, setPosts] = useState([]);
   const [dropdownIndex, setDropdownIndex] = useState(null);
   const navigate = useNavigate();
-  const [likedPosts, setLikedPosts] = useState(new Set());
   const [commentText, setCommentText] = useState({});
   const [comments, setComments] = useState({});
   const [showComments, setShowComments] = useState({});
@@ -24,19 +23,17 @@ const HomeCard = (props) => {
   }, []);
 
   // Fetch posts
-  const fetchPosts = async (username) => {
+  const fetchPosts = async () => {
     try {
       const response = await axiosInstance.get("/api/posts/");
       setPosts(response.data.posts);
 
-      const likedPostsResponse = response.data.posts.reduce((acc, post) => {
-        if (post.likes.includes(username)) {
-          acc.add(post._id);
-        }
-        return acc;
-      }, new Set());
-
-      setLikedPosts(likedPostsResponse);
+      // const likedPostsResponse = response.data.posts.reduce((acc, post) => {
+      //   if (post.likes.includes(username)) {
+      //     acc.add(post._id);
+      //   }
+      //   return acc;
+      // }, new Set());
     } catch (error) {
       console.error("Error fetching posts: ", error);
     }
@@ -113,58 +110,77 @@ const HomeCard = (props) => {
     setDropdownIndex((prevIndex) => (prevIndex === index ? null : index));
   };
 
-  const handleToggleLike = async (postId) => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        console.error("No token found in localStorage");
-        return;
-      }
-
-      let response;
-      if (likedPosts.has(postId)) {
-        response = await axios.patch(
-          `http://localhost:5000/api/posts/${postId}/unlike`,
-          {},
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setLikedPosts((prevLikedPosts) => {
-          const updatedLikedPosts = new Set(prevLikedPosts);
-          updatedLikedPosts.delete(postId);
-          return updatedLikedPosts;
-        });
-      } else {
-        response = await axios.patch(
-          `http://localhost:5000/api/posts/${postId}/like`,
-          {},
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setLikedPosts((prevLikedPosts) => {
-          const updatedLikedPosts = new Set(prevLikedPosts);
-          updatedLikedPosts.add(postId);
-          return updatedLikedPosts;
-        });
-      }
-
-      toast.success(response.data.msg);
-      fetchPosts(username);
-    } catch (error) {
-      console.error("Error toggling like status:", error);
-      toast.error(error.response.data.msg);
-    }
-  };
-
-
   const handleToggleComments = (postId) => {
     if (showComments[postId]) {
       setShowComments((prev) => ({ ...prev, [postId]: false }));
     } else {
       fetchComments(postId);
       setShowComments((prev) => ({ ...prev, [postId]: true }));
+    }
+  };
+
+  const handleLike = async (postId) => {
+    try {
+      const token = localStorage.getItem("token");
+      console.log("Token in Like Request:", token); // Log token here
+
+      const response = await axios.post(
+        `http://localhost:5000/api/posts/${postId}/like`,
+        {},
+        {
+          headers: { Authorization: `${token}` },
+        }
+      );
+
+      // Update the post data in the state
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                likes: response.data.post.likes,
+                likeCount: response.data.post.likeCount,
+              }
+            : post
+        )
+      );
+
+      toast.success("Post liked successfully");
+      console.log("Like response:", response); // Log response
+      fetchPosts(); // Refresh posts to update like status
+    } catch (error) {
+      console.error(
+        "Error liking post:",
+        error.response?.data || error.message
+      );
+      toast.error("Failed to like post");
+    }
+  };
+
+  const handleUnlike = async (postId) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        `http://localhost:5000/api/posts/${postId}/unlike`,
+        {},
+        {
+          headers: { Authorization: `${token}` },
+        }
+      );
+  
+      // Update the post data in the state
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post._id === postId
+            ? { ...post, likes: post.likes.filter((like) => like !== username), likeCount: post.likeCount - 1 }
+            : post
+        )
+      );
+  
+      toast.success("Post unliked successfully");
+    } catch (error) {
+      console.error("Error unliking post:", error);
+      toast.error("Failed to unlike post");
     }
   };
 
@@ -182,7 +198,9 @@ const HomeCard = (props) => {
                 <div className="ml-4 w-full flex items-center justify-between">
                   <div>
                     <span className="block font-semibold">{post.username}</span>
-                    <span className="text-gray-600 text-sm">{post.timespan}</span>
+                    <span className="text-gray-600 text-sm">
+                      {post.timespan}
+                    </span>
                   </div>
                   <div className="relative">
                     <i
@@ -234,21 +252,17 @@ const HomeCard = (props) => {
                 />
                 <div className="flex flex-col text-gray-600">
                   <div className="flex justify-between">
-                    <button
-                      onClick={() => handleToggleLike(post._id)}
-                      className={`flex items-center gap-1 h-9 w-36 justify-center rounded-full px-4 py-2 transition-all ${
-                        likedPosts.has(post._id)
-                          ? "bg-red-500 text-white"
-                          : "bg-gray-200 text-gray-700"
-                      }`}
-                    >
-                      <i
-                        className={`heart-icon ri-heart-${
-                          likedPosts.has(post._id) ? "fill" : "line"
-                        }`}
-                      ></i>
-                      {likedPosts.has(post._id) ? "Liked" : "Like"}
-                    </button>
+                  <button
+                    onClick={() =>
+                      post.likes.includes(username)
+                        ? handleUnlike(post._id)
+                        : handleLike(post._id)
+                    }
+                    className="flex items-center gap-1 h-9 w-36 justify-center rounded-full bg-gray-200 px-4 py-2 text-gray-700 transition-all"
+                  >
+                    {post.likes.includes(username) ? "Unlike" : "Like"}
+                  </button>
+
                     <button
                       onClick={() => handleToggleComments(post._id)}
                       className="flex items-center gap-1 h-9 w-36 justify-center rounded-full bg-gray-200 px-4 py-2 text-gray-700 transition-all"
@@ -257,10 +271,15 @@ const HomeCard = (props) => {
                       {showComments[post._id] ? "Hide Comments" : "Comments"}
                     </button>
                   </div>
-                  <div className="mt-2 text-sm">
-                    {post.likes.length}{" "}
-                    {post.likes.length === 1 ? "like" : "likes"}
-                  </div>
+
+                  {post.likes.includes(username) && (
+                  <p className="mt-2 text-gray-500">You have liked this post.</p>
+                )}
+
+                <p className="mt-2 text-gray-600">
+                  {post.likeCount} {post.likeCount === 1 ? "like" : "likes"}
+                </p>
+
                   {showComments[post._id] && (
                     <div className="mt-4">
                       <div className="flex items-center gap-2 mb-2">
@@ -314,7 +333,6 @@ const HomeCard = (props) => {
             </div>
           ))}
         </div>
-     
       </div>
     </div>
   );
