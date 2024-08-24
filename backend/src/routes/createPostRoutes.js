@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { postImage } = require("../middleware/uploadMiddleware");
-const {createPost, updatePost, deletePost, getPosts, getPost, addComment, getComments, deleteComment} = require ('../controllers/createPostController');
+const {createPost, updatePost, deletePost, getPosts, getPost, addComment, getComments, deleteComment, likePost, unlikePost} = require ('../controllers/createPostController');
 const authMiddleware = require('../middleware/authMiddleware');
 const authorizeRole = require('../middleware/authorizationMiddleware');
 
@@ -13,6 +13,10 @@ router.get('/:id', getPost);
 router.post('/comments', authMiddleware,  addComment);
 router.get('/:postId/comments', getComments);
 router.delete('/:postId/comments/:commentId', deleteComment);
+router.patch('/:postId/like', authMiddleware, likePost);
+router.patch('/unlike/:id', authMiddleware, unlikePost);
+
+
 
 
 

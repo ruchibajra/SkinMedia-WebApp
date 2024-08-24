@@ -58,6 +58,11 @@ const createPostSchema = new Schema({
     required: true,
   },
 
+  likes: [String], // Array of usernames or user IDs
+
+
+
+
   comments: [commentSchema], // Embed comments
 });
 

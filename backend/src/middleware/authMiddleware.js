@@ -13,9 +13,9 @@ const authMiddleware = (req, res, next) => {
   // if token is found then:
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('Decoded Token:', decoded);
+    // console.log('Decoded Token:', decoded);
     req.user = decoded.user; /** req.user like a special database which can be access from anywhere of backend data file to obtain data */
-    console.log('User from Token:', req.user);
+    // console.log('User from Token:', req.user);
 
     next(); /**next kam gara */
   } catch (err) {
