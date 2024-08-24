@@ -121,7 +121,6 @@ const getPosts = async (req, res) => {
 };
 
 // controller for getting a single post through id
-
 const getPost = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -226,76 +225,57 @@ const deleteComment = async (req, res) => {
 
 const likePost = async (req, res) => {
   try {
-    console.log("User likePost from req.user:", req.user); // Log user data
+    const postId = req.params.id;
+    const username = req.user.username; 
 
-    const { id } = req.params;
+    const post = await Post.findById(postId);
 
-    if (!req.user) {
-      return res.status(401).json({ msg: "User not authenticated" });
-    }
-
-    const { username } = req.user; // Safe to destructure now
-    console.log("Username ho hai:", username);
-
-    // Find the post by ID
-    const post = await Post.findById(id);
     if (!post) {
       return res.status(404).json({ msg: "Post not found" });
     }
 
     if (post.likes.includes(username)) {
-      return res.status(400).json({ msg: "Post already liked" });
+      return res.status(400).json({ msg: "You have already liked this post" });
     }
 
     post.likes.push(username);
+    post.likeCount += 1;
+
+    
     await post.save();
 
-    res
-      .status(200)
-      .json({ msg: "Post liked successfully", likes: post.likes.length });
+    res.status(200).json({ msg: "Post liked successfully", post });
   } catch (error) {
-    console.error("Error liking post:", error);
-    res.status(500).json({ msg: "Server error" });
+    sendErrorResponse(res, error);
   }
 };
 
-
-
 const unlikePost = async (req, res) => {
   try {
-    const { id } = req.params;
+    const postId = req.params.id;
+    const username = req.user.username;
 
-    if (!req.user) {
-      return res.status(401).json({ msg: "User not authenticated" });
-    }
+    const post = await Post.findById(postId);
 
-    console.log("User from req:", req.user); // Add this line for debugging
-
-    const { username } = req.user; // Safe to destructure now
-
-    // Find the post by ID
-    const post = await Post.findById(id);
     if (!post) {
       return res.status(404).json({ msg: "Post not found" });
     }
 
-    // Check if the user has already liked the post
     if (!post.likes.includes(username)) {
-      return res.status(400).json({ msg: "Post not liked by user" });
+      return res.status(400).json({ msg: "You have not liked this post yet" });
     }
 
-    // Remove user from post's likes
     post.likes = post.likes.filter((user) => user !== username);
+    post.likeCount -= 1;
+
     await post.save();
 
-    res
-      .status(200)
-      .json({ msg: "Post unliked successfully", likes: post.likes.length });
+    res.status(200).json({ msg: "Post unliked successfully", post });
   } catch (error) {
-    console.error("Error unliking post:", error);
-    res.status(500).json({ msg: "Server error" });
+    sendErrorResponse(res, error);
   }
 };
+
 
 module.exports = {
   createPost,
@@ -307,5 +287,5 @@ module.exports = {
   getComments,
   deleteComment,
   likePost,
-  unlikePost,
+  unlikePost
 };

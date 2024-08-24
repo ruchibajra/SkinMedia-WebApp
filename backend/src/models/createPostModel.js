@@ -57,13 +57,18 @@ const createPostSchema = new Schema({
     ref: "User",
     required: true,
   },
+  
+  comments: [commentSchema], 
 
-  likes: [String], // Array of usernames or user IDs
-
-
-
-
-  comments: [commentSchema], // Embed comments
+  likes: {
+    type: [String], 
+    default: [],
+  },
+  
+  likeCount: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const Post = mongoose.model("Post", createPostSchema);
