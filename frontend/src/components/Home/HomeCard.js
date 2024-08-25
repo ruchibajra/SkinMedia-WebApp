@@ -13,6 +13,8 @@ const HomeCard = (props) => {
   const [commentText, setCommentText] = useState({});
   const [comments, setComments] = useState({});
   const [showComments, setShowComments] = useState({});
+  const [likedUsers, setLikedUsers] = useState({});
+  const [showLikedUsers, setShowLikedUsers] = useState({});
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -122,7 +124,7 @@ const HomeCard = (props) => {
   const handleLike = async (postId) => {
     try {
       const token = localStorage.getItem("token");
-      console.log("Token in Like Request:", token); // Log token here
+      // console.log("Token in Like Request:", token); // Log token here
 
       const response = await axios.post(
         `http://localhost:5000/api/posts/${postId}/like`,
@@ -167,20 +169,44 @@ const HomeCard = (props) => {
           headers: { Authorization: `${token}` },
         }
       );
-  
+
       // Update the post data in the state
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
           post._id === postId
-            ? { ...post, likes: post.likes.filter((like) => like !== username), likeCount: post.likeCount - 1 }
+            ? {
+                ...post,
+                likes: post.likes.filter((like) => like !== username),
+                likeCount: post.likeCount - 1,
+              }
             : post
         )
       );
-  
+
       toast.success("Post unliked successfully");
     } catch (error) {
       console.error("Error unliking post:", error);
       toast.error("Failed to unlike post");
+    }
+  };
+
+  const fetchLikedUsers = async (postId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/posts/${postId}/likes`
+      );
+      setLikedUsers((prev) => ({ ...prev, [postId]: response.data.users }));
+    } catch (error) {
+      console.error("Error fetching liked users:", error);
+    }
+  };
+
+  const handleToggleLikedUsers = (postId) => {
+    if (showLikedUsers[postId]) {
+      setShowLikedUsers((prev) => ({ ...prev, [postId]: false }));
+    } else {
+      fetchLikedUsers(postId);
+      setShowLikedUsers((prev) => ({ ...prev, [postId]: true }));
     }
   };
 
@@ -252,16 +278,16 @@ const HomeCard = (props) => {
                 />
                 <div className="flex flex-col text-gray-600">
                   <div className="flex justify-between">
-                  <button
-                    onClick={() =>
-                      post.likes.includes(username)
-                        ? handleUnlike(post._id)
-                        : handleLike(post._id)
-                    }
-                    className="flex items-center gap-1 h-9 w-36 justify-center rounded-full bg-gray-200 px-4 py-2 text-gray-700 transition-all"
-                  >
-                    {post.likes.includes(username) ? "Unlike" : "Like"}
-                  </button>
+                    <button
+                      onClick={() =>
+                        post.likes.includes(username)
+                          ? handleUnlike(post._id)
+                          : handleLike(post._id)
+                      }
+                      className="flex items-center gap-1 h-9 w-36 justify-center rounded-full bg-gray-200 px-4 py-2 text-gray-700 transition-all"
+                    >
+                      {post.likes.includes(username) ? "Unlike" : "Like"}
+                    </button>
 
                     <button
                       onClick={() => handleToggleComments(post._id)}
@@ -270,15 +296,39 @@ const HomeCard = (props) => {
                       <i className="comment-icon ri-chat-1-line"></i>
                       {showComments[post._id] ? "Hide Comments" : "Comments"}
                     </button>
+                    {/* <button
+                    onClick={() => handleToggleLikedUsers(post._id)}
+                    className="flex items-center gap-1 h-9 w-36 justify-center rounded-full bg-gray-200 px-4 py-2 text-gray-700 transition-all"
+                  >
+                    <i className="like-icon ri-thumb-up-line"></i>
+                    {post.likeCount} {post.likeCount === 1 ? "like" : "likes"}
+                  </button> */}
                   </div>
 
-                  {post.likes.includes(username) && (
-                  <p className="mt-2 text-gray-500">You have liked this post.</p>
+                  {showLikedUsers[post._id] && (
+                  <div className="mt-4 bg-gray-100 p-4 rounded-md">
+                    <h3 className="text-lg font-semibold">Users who liked this post:</h3>
+                    <ul className="mt-2">
+                      {likedUsers[post._id]?.map((user) => (
+                        <li key={user._id} className="text-gray-700">
+                          {user.username}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
 
-                <p className="mt-2 text-gray-600">
-                  {post.likeCount} {post.likeCount === 1 ? "like" : "likes"}
-                </p>
+                  
+
+                  {post.likes.includes(username) && (
+                    <p className="mt-2 text-gray-500">
+                      You have liked this post.
+                    </p>
+                  )}
+
+                  <p className="mt-2 text-gray-600">
+                    {post.likeCount} {post.likeCount === 1 ? "like" : "likes"}
+                  </p>
 
                   {showComments[post._id] && (
                     <div className="mt-4">

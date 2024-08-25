@@ -108,7 +108,6 @@ const Profile = () => {
         // Save the new profile image URL to localStorage
         localStorage.setItem("profileImage", response.data.imageUrl);
         console.log(localStorage.getItem("profileImage"));
-
       } catch (err) {
         setError(err.message);
       }
@@ -213,53 +212,51 @@ const Profile = () => {
           <h3 className="text-lg font-medium mb-4">Overview</h3>
           <div className="flex flex-col md:flex-row justify-between mb-6">
             <div className="flex flex-col items-center">
-              <h3 className="text-3xl font-semibold">53,920</h3>
+              <h3 className="text-3xl font-semibold">112</h3>
               <p className="text-gray-600">Members</p>
             </div>
             <div className="flex flex-col items-center">
-              <h3 className="text-3xl font-semibold">212</h3>
+              <h3 className="text-3xl font-semibold">42</h3>
               <p className="text-gray-600">Following</p>
             </div>
           </div>
           {/* Additional profile information or activities */}
           <div className="bg-white p-4 rounded-lg shadow-md">
             <h4 className="text-lg font-medium mb-2">Skin Type</h4>
-            <p className="text-gray-700">Combination Skin</p>
+            <p className="text-gray-700">Oily Skin</p>
 
             <br />
 
             <h4 className="text-lg font-medium mb-2">Skin History</h4>
             <p className="text-gray-700">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-              in turpis quis eros cursus tincidunt. Lorem ipsum dolor sit, amet
-              consectetur adipisicing elit. Quaerat facilis sequi possimus in
-              adipisci id itaque, numquam sunt! Corrupti, autem. Reiciendis
-              corporis voluptatem accusantium pariatur magnam quo delectus
-              doloremque quia!
+              Sharing my skincare journey from acne-prone to clear skin. I'll share how I tackled my
+              skin challenges, starting with the products that truly made a
+              difference. From cleansing to moisturizing, each step was a
+              learning experience that brought me closer to the clear skin I
+              enjoy today. I'll break down the key products that helped me along
+              the way, offering tips and insights so you can find what works
+              best for your unique skin. Join me as I reflect on the highs,
+              lows, and ultimately the joy of finding what truly nourishes my
+              skin.
             </p>
 
             <br />
             <p className="text-gray-700">
               <li>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Curabitur in turpis quis eros cursus tincidunt.
+              Acne Breakouts: Struggled with persistent acne during teenage years.
               </li>
               <li>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Curabitur in turpis quis eros cursus tincidunt.
+              Trial and Error: Tried various over-the-counter products with little success.
+
               </li>
               <li>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Curabitur in turpis quis eros cursus tincidunt.
+              Skincare Research: Started researching ingredients and skin types.
+
               </li>
               <li>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Curabitur in turpis quis eros cursus tincidunt.
+              Customized Routine: Developed a routine with gentle cleansers, targeted treatments, and non-comedogenic moisturizers.
               </li>
-              <li>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Curabitur in turpis quis eros cursus tincidunt.
-              </li>
+            
             </p>
           </div>
         </div>

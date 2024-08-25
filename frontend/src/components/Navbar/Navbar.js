@@ -32,14 +32,14 @@ const Navbar = (props) => {
               className="btn p-2 bg-blue-600 rounded-2xl text-white w-14 h-8 gap-4 mr-3"
               to="/login"
             >
-              Login
+              Logout
             </Link>
-            <Link
+            {/* <Link
               className="btn p-2 bg-gray-200 rounded-2xl text-gray-700 w-20 h-8"
               to="/signup"
             >
               Sign Up
-            </Link>
+            </Link> */}
           </div>
         </div>
 
