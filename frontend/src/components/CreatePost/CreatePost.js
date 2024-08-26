@@ -3,6 +3,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axiosInstance from "../../config/axiosConfig";
 import { useLocation, useNavigate } from "react-router-dom";
+import Navbar from "../Navbar/Navbar"; // Ensure Navbar path is correct
 
 const CreatePost = () => {
   const location = useLocation();
@@ -27,7 +28,6 @@ const CreatePost = () => {
     if (userInfo) {
       setUser(userInfo);
     }
-
 
     if (location.state && location.state.post) {
       setFormData({
@@ -68,17 +68,11 @@ const CreatePost = () => {
     data.append("source", formData.source);
     data.append("skintype", formData.skintype);
     data.append("productUsedTime", formData.productUsedTime);
-    data.append("username", user.username); 
-
-    // console.log(user.username);
-    console.log(data);
-
-    console.log("Data:", data);
-    console.log("FormData:", formData);
+    data.append("username", user.username);
 
     try {
       let response;
-      
+
       if (mode === 'update') {
         // Update existing post
         response = await axiosInstance.patch(`/api/posts/update/${post._id}`, data, {
@@ -96,120 +90,119 @@ const CreatePost = () => {
         });
         toast.success("Post created successfully!");
       }
-  
-      console.log("Response:", response.data);
+
       navigate("/home"); // Navigate to the home page or wherever appropriate
     } catch (error) {
-      console.error("Error:", error);
       toast.error(error.response?.data?.msg || "An error occurred");
     }
   };
 
   return (
-    <div className="ml-56 container mx-auto p-4">
-      <ToastContainer />
-      <h1 className="text-2xl font-bold mb-4 mt-14">
-        {" "}
-        {mode === "update" ? "Update Post" : "Create Post"}
-      </h1>{" "}
-      <br />
-      <h1 className="text-xl mb-4">
-        Welcome, {user ? user.username : "Guest"} <br />
-
-
-      </h1>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-gray-700">Title</label>
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            className="border rounded w-full py-2 px-3"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Description</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            className="border rounded w-full py-2 px-3"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Product Name</label>
-          <input
-            type="text"
-            name="productName"
-            value={formData.productName}
-            onChange={handleChange}
-            className="border rounded w-full py-2 px-3"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Product Image:</label>
-          <input
-            type="file"
-            name="productImage"
-            onChange={handleFileChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-          {formData.productImage &&
-          typeof formData.productImage === "object" ? (
-            <img
-              src={URL.createObjectURL(formData.productImage)}
-              alt="Product"
-              className="mt-4 w-32 h-32 object-cover"
+    <div className="flex flex-col items-center">
+      <Navbar />
+      <div className="p-4 w-3/6 mx-auto bg-white rounded-lg shadow-md mt-10">
+        <ToastContainer />
+        <h1 className="text-2xl font-semibold mb-4 text-center">
+          {mode === "update" ? "Update Post" : "Create Post"}
+        </h1>
+        <h2 className="text-lg mb-4 text-center">
+          Welcome, {user ? user.username : "Guest"}
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-1">
+            <label className="block text-gray-700 font-medium text-sm">Title</label>
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              className="border rounded w-full py-1 px-2 text-sm focus:ring-2 focus:ring-blue-500"
+              required
             />
-          ) : (
-            <img
-              src={formData.productImage}
-              alt="Product"
-              className="mt-4 w-32 h-32 object-cover"
+          </div>
+          <div className="space-y-1">
+            <label className="block text-gray-700 font-medium text-sm">Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              className="border rounded w-full py-1 px-2 text-sm focus:ring-2 focus:ring-blue-500"
+              required
+              rows="3"
             />
-          )}
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Source</label>
-          <input
-            type="text"
-            name="source"
-            value={formData.source}
-            onChange={handleChange}
-            className="border rounded w-full py-2 px-3"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Skin Type</label>
-          <input
-            type="text"
-            name="skintype"
-            value={formData.skintype}
-            onChange={handleChange}
-            className="border rounded w-full py-2 px-3"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Time Span</label>
-          <input
-            type="text"
-            name="productUsedTime"
-            value={formData.productUsedTime}
-            onChange={handleChange}
-            className="border rounded w-full py-2 px-3"
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded"
-        >
-          {mode === 'update' ? 'Save Changes' : 'Create Post'}
+          </div>
+          <div className="space-y-1">
+            <label className="block text-gray-700 font-medium text-sm">Product Name</label>
+            <input
+              type="text"
+              name="productName"
+              value={formData.productName}
+              onChange={handleChange}
+              className="border rounded w-full py-1 px-2 text-sm focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="block text-gray-700 font-medium text-sm">Product Image</label>
+            <input
+              type="file"
+              name="productImage"
+              onChange={handleFileChange}
+              className="border rounded w-full py-1 px-2 text-sm"
+            />
+            {formData.productImage && typeof formData.productImage === "object" ? (
+              <img
+                src={URL.createObjectURL(formData.productImage)}
+                alt="Product Preview"
+                className="mt-2 w-24 h-24 object-cover rounded"
+              />
+            ) : (
+              formData.productImage && (
+                <img
+                  src={formData.productImage}
+                  alt="Product"
+                  className="mt-2 w-24 h-24 object-cover rounded"
+                />
+              )
+            )}
+          </div>
+          <div className="space-y-1">
+            <label className="block text-gray-700 font-medium text-sm">Source</label>
+            <input
+              type="text"
+              name="source"
+              value={formData.source}
+              onChange={handleChange}
+              className="border rounded w-full py-1 px-2 text-sm focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="block text-gray-700 font-medium text-sm">Skin Type</label>
+            <input
+              type="text"
+              name="skintype"
+              value={formData.skintype}
+              onChange={handleChange}
+              className="border rounded w-full py-1 px-2 text-sm focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="block text-gray-700 font-medium text-sm">Time Span</label>
+            <input
+              type="text"
+              name="productUsedTime"
+              value={formData.productUsedTime}
+              onChange={handleChange}
+              className="border rounded w-full py-1 px-2 text-sm focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <button
+            type="submit"
+            className="bg-blue-500 text-white py-1 px-4 rounded-lg hover:bg-blue-600 transition text-sm"
+          >
+            {mode === 'update' ? 'Save Changes' : 'Create Post'}
           </button>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

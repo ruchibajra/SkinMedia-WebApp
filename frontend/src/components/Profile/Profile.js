@@ -6,6 +6,9 @@ const Profile = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [bio, setBio] = useState("");
+  const [skinType, setSkinType] = useState("");
+  const [skinHistory, setSkinHistory] = useState("");
+
   const [phone, setPhone] = useState("");
   const [profileImage, setProfileImage] = useState("");
   const [newProfileImage, setNewProfileImage] = useState(null);
@@ -28,6 +31,9 @@ const Profile = () => {
         const profileData = response.data.profile;
 
         setBio(profileData.bio || "No bio available");
+        setSkinType(profileData.skinType || "No skin type available");
+        setSkinHistory(profileData.skinHistory || "No skin history available");
+
         setUsername(profileData.user.username || "Username not available");
         setEmail(profileData.user.email || "Email not available");
         setPhone(profileData.user.phone || "Phone not available");
@@ -64,6 +70,7 @@ const Profile = () => {
           email,
         },
         bio,
+        skinType,
         profileImage: newProfileImage || profileImage,
       };
 
@@ -187,9 +194,8 @@ const Profile = () => {
           ) : (
             <p className="text-white text-center mb-4">{bio}</p>
           )}
-          <h3 className="italic text-gray-600 mb-4">
-            Skin Type: Combination Skin
-          </h3>
+         
+   
           <button
             onClick={handleEditClick}
             className="w-full bg-slate-100 text-slate-600 font-semibold py-2 rounded-lg shadow-md transition-transform transform hover:scale-105"
@@ -220,44 +226,64 @@ const Profile = () => {
               <p className="text-gray-600">Following</p>
             </div>
           </div>
-          {/* Additional profile information or activities */}
           <div className="bg-white p-4 rounded-lg shadow-md">
             <h4 className="text-lg font-medium mb-2">Skin Type</h4>
-            <p className="text-gray-700">Oily Skin</p>
-
+            {isEditing ? (
+            <textarea
+              value={skinType}
+              onChange={(e) => setSkinType(e.target.value)}
+              placeholder="Skintype"
+              className="mb-4 p-2 rounded border  text-slate-600"
+            />
+          ) : (
+            <p className="text-gray-700 mb-4">{skinType}</p>
+          )}
             <br />
 
             <h4 className="text-lg font-medium mb-2">Skin History</h4>
-            <p className="text-gray-700">
-              Sharing my skincare journey from acne-prone to clear skin. I'll share how I tackled my
-              skin challenges, starting with the products that truly made a
-              difference. From cleansing to moisturizing, each step was a
-              learning experience that brought me closer to the clear skin I
-              enjoy today. I'll break down the key products that helped me along
-              the way, offering tips and insights so you can find what works
-              best for your unique skin. Join me as I reflect on the highs,
-              lows, and ultimately the joy of finding what truly nourishes my
-              skin.
-            </p>
 
-            <br />
-            <p className="text-gray-700">
-              <li>
-              Acne Breakouts: Struggled with persistent acne during teenage years.
-              </li>
-              <li>
-              Trial and Error: Tried various over-the-counter products with little success.
-
-              </li>
-              <li>
-              Skincare Research: Started researching ingredients and skin types.
-
-              </li>
-              <li>
-              Customized Routine: Developed a routine with gentle cleansers, targeted treatments, and non-comedogenic moisturizers.
-              </li>
+            {isEditing ? (
+            <textarea
+              value={skinHistory}
+              onChange={(e) => setSkinHistory(e.target.value)}
+              placeholder="Skintype"
+              className="mb-4 p-2 rounded border  text-slate-600"
+            />
+          ) : (
+            <p className="text-gray-700 mb-4">{skinHistory}</p>
+          )}
             
-            </p>
+            {/* <p className="text-gray-700">
+              Sharing my skincare journey from acne-prone to clear skin. I'll
+              share how I tackled my skin challenges, starting with the products
+              that truly made a difference. From cleansing to moisturizing, each
+              step was a learning experience that brought me closer to the clear
+              skin I enjoy today. I'll break down the key products that helped
+              me along the way, offering tips and insights so you can find what
+              works best for your unique skin. Join me as I reflect on the
+              highs, lows, and ultimately the joy of finding what truly
+              nourishes my skin.
+            </p> */}
+
+            {/* <br />
+            <p className="text-gray-700">
+              <li>
+                Acne Breakouts: Struggled with persistent acne during teenage
+                years.
+              </li>
+              <li>
+                Trial and Error: Tried various over-the-counter products with
+                little success.
+              </li>
+              <li>
+                Skincare Research: Started researching ingredients and skin
+                types.
+              </li>
+              <li>
+                Customized Routine: Developed a routine with gentle cleansers,
+                targeted treatments, and non-comedogenic moisturizers.
+              </li>
+            </p> */}
           </div>
         </div>
         {/* Right part end */}

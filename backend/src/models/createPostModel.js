@@ -68,7 +68,8 @@ const createPostSchema = new Schema({
   likeCount: {
     type: Number,
     default: 0,
-  },
+  },  
+
 });
 
 const Post = mongoose.model("Post", createPostSchema);

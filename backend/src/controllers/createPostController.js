@@ -276,22 +276,6 @@ const unlikePost = async (req, res) => {
   }
 };
 
-const getPostLikes = async (req, res) => {
-  try {
-    const postId = req.params.id;
-    const post = await Post.findById(postId);
-
-    if (!post) {
-      return res.status(404).json({ msg: "Post not found" });
-    }
-
-    // Assuming `post.likes` contains an array of usernames
-    const users = await User.find({ username: { $in: post.likes } });
-    res.status(200).json({ users });
-  } catch (error) {
-    sendErrorResponse(res, error);
-  }
-};
 
 module.exports = {
   createPost,
@@ -304,5 +288,5 @@ module.exports = {
   deleteComment,
   likePost,
   unlikePost,
-  getPostLikes
+  
 };

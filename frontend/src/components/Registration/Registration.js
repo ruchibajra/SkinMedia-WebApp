@@ -3,7 +3,8 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+
 
 const Registration = () => {
   const [userData, setUserData] = useState({
@@ -17,6 +18,8 @@ const Registration = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,10 +59,9 @@ const Registration = () => {
           }
         );
         toast.success("Registration successful");
-        // Uncomment to navigate afte r successful registration
-        // setTimeout(() => {
-        //   navigate("/login");
-        // }, 2000);
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
       } catch (error) {
         console.error(error.message);
         toast.error(error.response?.data?.msg || "Registration failed");

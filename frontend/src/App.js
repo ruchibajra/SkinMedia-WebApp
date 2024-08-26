@@ -1,6 +1,11 @@
 import "./App.css";
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 
 import Navbar from "./components/Navbar/Navbar";
 import Login from "./components/Login/Login";
@@ -14,14 +19,16 @@ import FullPost from "./components/FullPost/FullPost";
 
 function App() {
   const location = useLocation();
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <>
-      {!['/', '/signup', '/login'].includes(location.pathname) && <Navbar />}
+      {!["/", "/signup", "/login"].includes(location.pathname) && (
+        <Navbar onSearch={(query) => setSearchQuery(query)} />)}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/post" element={<FullPost />} />
-        <Route path="/home" element={<HomeCard />} />
+        <Route path="/home" element={<HomeCard searchQuery={searchQuery} />} />
         <Route path="/signup" element={<Registration />} />
         <Route path="/login" element={<Login />} />
         <Route path="/popular" element={<Popular />} />

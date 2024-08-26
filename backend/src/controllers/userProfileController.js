@@ -12,9 +12,10 @@ const sendErrorResponse = (res, error) => {
 // Update user profile as it is created during registration
 const updateUserProfile = async (req, res) => {
   try {
-    const { bio } = req.body;
+    const { bio, skinType, skinHistory} = req.body;
     const {user} = req.body;
-    let updateData = { bio };
+    let updateData = { bio,  skinType, skinHistory};
+
 
     // check for files
     if (req.file) {

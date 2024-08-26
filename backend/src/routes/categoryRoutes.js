@@ -18,7 +18,9 @@ const {
  * @return response
  */
 
-router.post("/create", auth, authorizeRole("admin"), createCategory);
+router.post("/create", createCategory);
+// router.post("/create", auth, authorizeRole("admin"), createCategory);
+
 
 /**
  * @description To get all categories
@@ -36,7 +38,9 @@ router.get("/all", getCategories);
  * @type PUT
  * @return response
  */
-router.patch("/update/:id", auth, authorizeRole("admin"), updateCategory);
+router.patch("/update/:id", updateCategory);
+// router.patch("/update/:id", auth, authorizeRole("admin"), updateCategory);
+
 
 /**
  * @description To delete categories by id
@@ -45,7 +49,7 @@ router.patch("/update/:id", auth, authorizeRole("admin"), updateCategory);
  * @type DELETE
  * @return response
  */
-router.delete("/delete/:id", auth, authorizeRole("admin"), deleteCategory);
+router.delete("/delete/:id",  deleteCategory);
 
 module.exports = router;
 

@@ -17,6 +17,14 @@ const userProfileSchema = new mongoose.Schema({
     profileImage:{
         type: String
     },
+
+    skinType: {
+        type: String,
+    },
+
+    skinHistory: {
+        type: String,
+    }
 });
 
 module.exports = mongoose.model('Profile', userProfileSchema );
