@@ -16,6 +16,7 @@ import CategoryIntegration from "./components/Category/Category";
 import CreatePost from "./components/CreatePost/CreatePost";
 import Profile from "./components/Profile/Profile";
 import FullPost from "./components/FullPost/FullPost";
+import AdminPage from "./components/AdminPage/AdminPage";
 
 function App() {
   const location = useLocation();
@@ -37,6 +38,8 @@ function App() {
         <Route path="/communities" element={<Popular />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/createPost" element={<CreatePost />} />
+        <Route path="/admin" element={<AdminPage />} />
+
       </Routes>
     </>
   );

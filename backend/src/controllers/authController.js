@@ -65,6 +65,11 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
 
+     // Check if the user account is disabled
+     if (user.disabled) {
+      return res.status(403).json({ msg: "Account disabled. Please contact support." });
+    }
+
     const payload = {
       user: {
         id: user.id,
@@ -95,7 +100,80 @@ const loginUser = async (req, res) => {
   }
 };
 
+const getAllUsers = async (req, res) => {
+  try {
+    // Fetch all users from the database
+    const users = await User.find({}, 'username email role disabled'); // Fetch only necessary fields
+
+    if (!users) {
+      return res.status(404).json({ msg: "No users found" });
+    }
+
+    res.status(200).json({
+      msg: "Users fetched successfully",
+      users: users,
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error!");
+  }
+};
+
+// Disable a user account
+const disableUser = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Find the user by ID and update the `disabled` field to true
+    let user = await User.findByIdAndUpdate(
+      userId,
+      { disabled: true },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    res.status(200).json({
+      msg: "User account disabled successfully",
+      user: user,
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error!");
+  }
+};
+
+// Enable a user account
+const enableUser = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    let user = await User.findByIdAndUpdate(
+      userId,
+      { disabled: false },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    res.status(200).json({
+      msg: "User account enabled successfully",
+      user: user,
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error!");
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
+  disableUser,
+  getAllUsers,
+  enableUser,
 };

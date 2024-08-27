@@ -36,15 +36,11 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(response.data.user));
         toast.success("Login successful");
 
-        // if (response.data.user.role === "admin") {
-        //   navigate("/admin-home"); // Navigate to admin homepage
-        // } else {
-        //   navigate("/user-home"); // Navigate to user homepage
-        // }
-
-       setTimeout(() => {
-        navigate("/home");
-       }, 2000);
+        if (response.data.user.role === "admin") {
+          navigate("/admin"); // Navigate to admin homepage
+        } else {
+          navigate("/home"); // Navigate to user homepage
+        }
       } catch (error) {
         console.error(error.response.data.msg);
         toast.error(error.response.data.msg);
